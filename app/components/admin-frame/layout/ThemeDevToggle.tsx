@@ -18,7 +18,7 @@ export function ThemeDevToggle() {
       onClick={toggleTheme}
       className={cn(
         "inline-flex h-8 items-center gap-2 rounded-xl border px-3 text-[12px] font-medium transition",
-        "border-[color:var(--border-2)] bg-[color:var(--surface-overlay)] text-[color:var(--text-muted)]",
+        "border-[color:var(--border-2)] bg-[color:var(--surface-overlay)] text-[color:var(--text-2)]",
         "hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface-2)] hover:text-[color:var(--text-1)]"
       )}
       aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}
