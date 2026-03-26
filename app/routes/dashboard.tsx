@@ -1,6 +1,10 @@
 import { AdminScreenPage } from "~/components/admin-frame/pages/AdminScreenPage";
-import { screenContent } from "~/components/admin-frame/pages/screen-content";
+import { dashboardContent } from "~/components/admin-frame/pages/dashboard-content";
+
+export function meta() {
+  return [{ title: "Dashboard | Rectime Admin" }];
+}
 
 export default function DashboardRoute() {
-  return <AdminScreenPage {...screenContent.dashboard} />;
+  return <AdminScreenPage {...dashboardContent} />;
 }

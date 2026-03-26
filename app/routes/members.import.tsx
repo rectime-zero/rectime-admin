@@ -1,6 +1,10 @@
-import { AdminScreenPage } from "~/components/admin-frame/pages/AdminScreenPage";
-import { screenContent } from "~/components/admin-frame/pages/screen-content";
+import { AdminPlaceholderPage } from "~/components/admin-frame/pages/AdminPlaceholderPage";
+import { pageContent } from "~/components/admin-frame/pages/page-content";
+
+export function meta() {
+  return [{ title: "Import | Rectime Admin" }];
+}
 
 export default function MembersImportRoute() {
-  return <AdminScreenPage {...screenContent.membersImport} />;
+  return <AdminPlaceholderPage {...pageContent.membersImport} />;
 }

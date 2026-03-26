@@ -1,6 +1,10 @@
-import { AdminScreenPage } from "~/components/admin-frame/pages/AdminScreenPage";
-import { screenContent } from "~/components/admin-frame/pages/screen-content";
+import { AdminPlaceholderPage } from "~/components/admin-frame/pages/AdminPlaceholderPage";
+import { pageContent } from "~/components/admin-frame/pages/page-content";
+
+export function meta() {
+  return [{ title: "Export | Rectime Admin" }];
+}
 
 export default function ReportsExportRoute() {
-  return <AdminScreenPage {...screenContent.reportsExport} />;
+  return <AdminPlaceholderPage {...pageContent.reportsExport} />;
 }
