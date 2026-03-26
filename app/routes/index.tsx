@@ -1,7 +1,7 @@
 import { redirect } from "react-router";
 
 export function loader() {
-  return redirect("/dashboard");
+  return redirect("/login");
 }
 
 export default function IndexRoute() {
