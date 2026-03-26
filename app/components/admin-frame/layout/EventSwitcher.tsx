@@ -1,6 +1,8 @@
 import { CalendarClockIcon, ChevronDownIcon, PlusIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { cn } from "~/lib/cn";
+
 const events = [
   { id: "spring-cup", label: "Spring Cup 2026", meta: "Tokyo Dome" },
   { id: "summer-league", label: "Summer League", meta: "Yokohama Arena" },
@@ -33,37 +35,49 @@ export function EventSwitcher() {
   }, [isOpen]);
 
   return (
-    <div className="switcher" ref={rootRef}>
+    <div className="relative" ref={rootRef}>
       <button
         type="button"
-        className="switcher__button"
-        data-open={isOpen}
+        className={cn(
+          "inline-flex items-center gap-[7px] rounded-lg border px-[11px] py-[5px] text-[12.5px] font-medium transition",
+          "border-[color:var(--border-2)] bg-transparent text-[color:var(--text-1)]",
+          "hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface-2)]",
+          isOpen
+            ? "border-[color:var(--border-strong)] bg-[color:var(--surface-2)]"
+            : ""
+        )}
         onClick={() => setIsOpen((value) => !value)}
       >
         <CalendarClockIcon size={14} strokeWidth={1.8} />
         <span>{selectedEvent.label}</span>
-        <ChevronDownIcon size={14} strokeWidth={1.8} />
+        <ChevronDownIcon
+          size={14}
+          strokeWidth={1.8}
+          className="text-[color:var(--text-2)]"
+        />
       </button>
       {isOpen ? (
-        <div className="switcher__menu">
+        <div className="absolute left-0 top-[calc(100%+6px)] z-[120] min-w-[220px] rounded-xl border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] p-1.5 shadow-[var(--shadow-soft)] backdrop-blur-xl">
           {events.map((event) => (
             <button
               key={event.id}
               type="button"
-              className="switcher__item"
+              className="flex h-[35px] w-full items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm text-[color:var(--text-1)] transition hover:bg-[color:var(--surface-2)]"
               onClick={() => {
                 setSelectedId(event.id);
                 setIsOpen(false);
               }}
             >
               <span>{event.label}</span>
-              <span className="switcher__item-meta">{event.meta}</span>
+              <span className="text-xs text-[color:var(--text-2)]">
+                {event.meta}
+              </span>
             </button>
           ))}
-          <div className="menu-divider" />
+          <div className="mx-1 my-1.5 h-px bg-[color:var(--border-1)]" />
           <button
             type="button"
-            className="switcher__item"
+            className="flex h-[35px] w-full items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm text-[color:var(--text-1)] transition hover:bg-[color:var(--surface-2)]"
             onClick={() => setIsOpen(false)}
           >
             <PlusIcon size={14} strokeWidth={1.8} />

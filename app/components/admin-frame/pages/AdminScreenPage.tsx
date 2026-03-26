@@ -1,3 +1,5 @@
+import { cn } from "~/lib/cn";
+
 type Metric = {
   label: string;
   value: string;
@@ -36,53 +38,103 @@ export function AdminScreenPage({
   panelHint,
   checklist,
 }: AdminScreenPageProps) {
+  const toneClassName: Record<Activity["tone"], string> = {
+    green:
+      "border-[color:var(--tone-green-border)] bg-[color:var(--tone-green-bg)] text-[color:var(--tone-green-text)]",
+    blue: "border-[color:var(--tone-blue-border)] bg-[color:var(--tone-blue-bg)] text-[color:var(--tone-blue-text)]",
+    orange:
+      "border-[color:var(--tone-cyan-border)] bg-[color:var(--tone-cyan-bg)] text-[color:var(--tone-cyan-text)]",
+    red: "border-[color:var(--tone-red-border)] bg-[color:var(--tone-red-bg)] text-[color:var(--tone-red-text)]",
+  };
+
   return (
-    <div className="screen">
-      <section className="screen__hero">
-        <div className="screen-card screen-card--hero">
-          <div className="screen__eyebrow">{eyebrow}</div>
-          <h1 className="screen__title">{title}</h1>
-          <p className="screen__description">{description}</p>
+    <div className="flex flex-col gap-[18px]">
+      <section className="grid gap-[18px] xl:grid-cols-[minmax(0,1.4fr)_minmax(280px,0.9fr)]">
+        <div className="rounded-[18px] border border-[color:var(--border-1)] bg-[linear-gradient(180deg,var(--surface-card-gloss),transparent),var(--surface-1)] p-6 shadow-[var(--shadow-soft)]">
+          <div className="font-['DM_Mono'] text-xs uppercase tracking-[0.12em] text-[color:var(--brand-2)]">
+            {eyebrow}
+          </div>
+          <h1 className="mt-2.5 text-[clamp(28px,4vw,40px)] font-semibold leading-[1.04]">
+            {title}
+          </h1>
+          <p className="mt-3 max-w-[50ch] text-sm leading-7 text-[color:var(--text-2)]">
+            {description}
+          </p>
         </div>
-        <div className="screen-card screen-card--panel list-panel">
-          <div className="list-panel__header">
-            <div className="list-panel__title">{panelTitle}</div>
-            <div className="list-panel__hint">{panelHint}</div>
+        <div className="flex flex-col gap-3 rounded-[18px] border border-[color:var(--border-1)] bg-[linear-gradient(180deg,var(--surface-card-gloss),transparent),var(--surface-1)] p-5 shadow-[var(--shadow-soft)]">
+          <div className="flex items-center justify-between gap-3">
+            <div className="text-sm font-semibold">{panelTitle}</div>
+            <div className="text-xs text-[color:var(--text-3)]">
+              {panelHint}
+            </div>
           </div>
           {checklist.map((item) => (
-            <div key={`${item.name}-${item.status}`} className="list-row">
+            <div
+              key={`${item.name}-${item.status}`}
+              className="flex items-center justify-between gap-3 rounded-xl border border-[color:var(--border-1)] bg-[color:var(--surface-row)] px-[14px] py-3"
+            >
               <div>
-                <div className="list-row__name">{item.name}</div>
-                <div className="list-row__meta">{item.meta}</div>
+                <div className="text-[13px] font-medium">{item.name}</div>
+                <div className="text-xs text-[color:var(--text-3)]">
+                  {item.meta}
+                </div>
               </div>
-              <span className={`pill pill--${item.tone}`}>{item.status}</span>
+              <span
+                className={cn(
+                  "inline-flex items-center justify-center rounded-full border px-2 py-1 font-['DM_Mono'] text-[10px] uppercase tracking-[0.04em]",
+                  toneClassName[item.tone]
+                )}
+              >
+                {item.status}
+              </span>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="screen__grid">
+      <section className="grid gap-[18px] md:grid-cols-2 xl:grid-cols-3">
         {metrics.map((metric) => (
-          <article key={metric.label} className="screen-card metric">
-            <div className="metric__label">{metric.label}</div>
-            <div className="metric__value">{metric.value}</div>
-            <div className="metric__meta">{metric.meta}</div>
+          <article
+            key={metric.label}
+            className="rounded-[18px] border border-[color:var(--border-1)] bg-[linear-gradient(180deg,var(--surface-card-gloss),transparent),var(--surface-1)] p-[18px] shadow-[var(--shadow-soft)]"
+          >
+            <div className="font-['DM_Mono'] text-[11px] uppercase tracking-[0.08em] text-[color:var(--text-3)]">
+              {metric.label}
+            </div>
+            <div className="mt-2.5 text-[30px] font-semibold leading-none">
+              {metric.value}
+            </div>
+            <div className="mt-2 text-xs text-[color:var(--text-2)]">
+              {metric.meta}
+            </div>
           </article>
         ))}
       </section>
 
-      <section className="screen-card screen-card--panel list-panel">
-        <div className="list-panel__header">
-          <div className="list-panel__title">{activityTitle}</div>
-          <div className="list-panel__hint">{activityHint}</div>
+      <section className="flex flex-col gap-3 rounded-[18px] border border-[color:var(--border-1)] bg-[linear-gradient(180deg,var(--surface-card-gloss),transparent),var(--surface-1)] p-5 shadow-[var(--shadow-soft)]">
+        <div className="flex items-center justify-between gap-3">
+          <div className="text-sm font-semibold">{activityTitle}</div>
+          <div className="text-xs text-[color:var(--text-3)]">
+            {activityHint}
+          </div>
         </div>
         {activities.map((activity) => (
-          <div key={`${activity.name}-${activity.meta}`} className="list-row">
+          <div
+            key={`${activity.name}-${activity.meta}`}
+            className="flex items-center justify-between gap-3 rounded-xl border border-[color:var(--border-1)] bg-[color:var(--surface-row)] px-[14px] py-3"
+          >
             <div>
-              <div className="list-row__name">{activity.name}</div>
-              <div className="list-row__meta">{activity.meta}</div>
+              <div className="text-[13px] font-medium">{activity.name}</div>
+              <div className="text-xs text-[color:var(--text-3)]">
+                {activity.meta}
+              </div>
             </div>
-            <span className={`pill pill--${activity.tone}`}>
+            <span
+              className={cn(
+                "inline-flex items-center justify-center rounded-full border px-2 py-1 font-['DM_Mono'] text-[10px] uppercase tracking-[0.04em]",
+                toneClassName[activity.tone]
+              )}
+            >
               {activity.status}
             </span>
           </div>

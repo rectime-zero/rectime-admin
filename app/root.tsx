@@ -8,6 +8,7 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
+import { THEME_STORAGE_KEY } from "./lib/theme";
 import "./app.css";
 
 export const links: Route.LinksFunction = () => [
@@ -25,14 +26,28 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var storageKey = ${JSON.stringify(THEME_STORAGE_KEY)};
+                var storedTheme = window.localStorage.getItem(storageKey);
+                var theme = storedTheme === "light" ? "light" : "dark";
+                var root = document.documentElement;
+                root.classList.toggle("dark", theme === "dark");
+                root.dataset.theme = theme;
+              })();
+            `,
+          }}
+        />
       </head>
-      <body>
+      <body className="min-h-dvh bg-[radial-gradient(circle_at_top_right,var(--bg-glow),transparent_32%),linear-gradient(180deg,var(--bg-top)_0%,var(--bg-bottom)_100%)] text-[color:var(--text-1)] antialiased transition-colors duration-200">
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -62,24 +77,19 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="app-shell__main">
-      <div className="screen-card screen-card--hero">
-        <div className="screen__eyebrow">Failure Boundary</div>
-        <h1 className="screen__title">{message}</h1>
-        <p className="screen__description">{details}</p>
+    <main className="min-h-dvh p-6 md:p-8">
+      <div className="mx-auto max-w-5xl rounded-[1.5rem] border border-[color:var(--border-1)] bg-[color:var(--surface-1)] p-6 shadow-[var(--shadow-soft)] md:p-8">
+        <div className="font-['DM_Mono'] text-xs uppercase tracking-[0.18em] text-[color:var(--brand-2)]">
+          Failure Boundary
+        </div>
+        <h1 className="mt-3 text-[clamp(28px,4vw,40px)] font-semibold leading-[1.04]">
+          {message}
+        </h1>
+        <p className="mt-3 max-w-[50ch] text-sm leading-7 text-[color:var(--text-2)]">
+          {details}
+        </p>
         {stack ? (
-          <pre
-            style={{
-              marginTop: 20,
-              overflowX: "auto",
-              border: "1px solid var(--b1)",
-              borderRadius: 14,
-              padding: 16,
-              background: "rgba(255,255,255,0.02)",
-              color: "var(--tx2)",
-              fontSize: 12,
-            }}
-          >
+          <pre className="mt-5 overflow-x-auto rounded-2xl border border-[color:var(--border-1)] bg-[color:var(--surface-2)] p-4 text-xs text-[color:var(--text-2)]">
             <code>{stack}</code>
           </pre>
         ) : null}

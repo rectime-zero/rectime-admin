@@ -2,6 +2,7 @@ import { ChevronRightIcon } from "lucide-react";
 import { NavLink, useLocation } from "react-router";
 
 import { useNavState } from "~/hooks/useNavState";
+import { cn } from "~/lib/cn";
 import type { NavChildDef, NavItemDef } from "~/types/nav";
 
 import { NavAccordion } from "./NavAccordion";
@@ -24,6 +25,20 @@ function closeOnSmallScreen(closeForMobile: () => void) {
   }
 }
 
+function itemBaseClass(isActive: boolean) {
+  return cn(
+    "relative flex min-h-[42px] w-full items-center gap-3 rounded-xl bg-transparent px-3 text-[color:var(--text-2)] transition",
+    "hover:bg-[color:var(--surface-2)] hover:text-[color:var(--text-1)]",
+    isActive
+      ? "bg-[color:var(--surface-brand-soft)] text-[color:var(--text-1)]"
+      : ""
+  );
+}
+
+function badgeClass() {
+  return "ml-auto rounded-full border border-[color:var(--border-1)] px-[7px] py-[2px] font-['DM_Mono'] text-[10px] text-[color:var(--text-2)]";
+}
+
 function ChildLink({
   child,
   closeForMobile,
@@ -34,16 +49,23 @@ function ChildLink({
   return (
     <NavLink
       to={child.to}
-      className={({ isActive }) =>
-        `nav-item__row ${isActive ? "is-active" : ""}`
-      }
+      className={({ isActive }) => itemBaseClass(isActive)}
       onClick={() => closeOnSmallScreen(closeForMobile)}
     >
-      <span className="nav-item__icon" />
-      <span className="nav-item__text">{child.label}</span>
-      {child.badge ? (
-        <span className="nav-item__badge">{child.badge}</span>
-      ) : null}
+      {({ isActive }) => (
+        <>
+          {isActive ? (
+            <span className="absolute inset-y-[5px] left-0 w-[2.5px] rounded-r-sm bg-[color:var(--brand-1)]" />
+          ) : null}
+          <span className="inline-flex w-4 min-w-4 items-center justify-center" />
+          <span className="overflow-hidden whitespace-nowrap text-[13px] font-medium opacity-100">
+            {child.label}
+          </span>
+          {child.badge ? (
+            <span className={badgeClass()}>{child.badge}</span>
+          ) : null}
+        </>
+      )}
     </NavLink>
   );
 }
@@ -64,25 +86,48 @@ export function NavItem({ def }: NavItemProps) {
 
   if (hasChildren && def.children) {
     return (
-      <div className="nav-item">
+      <div className="group/nav relative">
         <button
           type="button"
-          className={`nav-item__button ${isActive ? "is-active" : ""}`}
+          className={itemBaseClass(isActive)}
           onClick={() => {
             if (isSidebarOpen) {
               toggleAccordion(def.id);
             }
           }}
         >
-          <span className="nav-item__icon">{def.icon}</span>
-          <span className="nav-item__text">{def.label}</span>
+          {isActive ? (
+            <span className="absolute inset-y-[5px] left-0 w-[2.5px] rounded-r-sm bg-[color:var(--brand-1)]" />
+          ) : null}
+          <span className="inline-flex w-4 min-w-4 items-center justify-center">
+            {def.icon}
+          </span>
+          <span
+            className={cn(
+              "overflow-hidden whitespace-nowrap text-[13px] font-medium transition-[max-width,opacity] duration-200",
+              isSidebarOpen ? "max-w-40 opacity-100" : "max-w-0 opacity-0"
+            )}
+          >
+            {def.label}
+          </span>
           {def.badge ? (
-            <span className="nav-item__badge">{def.badge}</span>
+            <span
+              className={cn(
+                badgeClass(),
+                isSidebarOpen ? "opacity-100" : "hidden"
+              )}
+            >
+              {def.badge}
+            </span>
           ) : null}
           <ChevronRightIcon
             size={14}
             strokeWidth={1.8}
-            className={`nav-item__chevron ${isAccordionOpen ? "is-open" : ""}`}
+            className={cn(
+              "ml-auto text-[color:var(--text-3)] transition duration-200",
+              isSidebarOpen ? "opacity-100" : "hidden",
+              isAccordionOpen ? "rotate-90" : ""
+            )}
           />
         </button>
         <NavAccordion isOpen={isSidebarOpen && isAccordionOpen}>
@@ -94,34 +139,43 @@ export function NavItem({ def }: NavItemProps) {
             />
           ))}
         </NavAccordion>
-        <div className="hover-popup" aria-hidden={isSidebarOpen}>
-          <div className="hover-popup__header">
-            <span className="nav-item__icon">{def.icon}</span>
-            <span>{def.label}</span>
-            {def.badge ? (
-              <span className="hover-popup__badge">{def.badge}</span>
-            ) : null}
-          </div>
-          <div className="hover-popup__items">
-            {def.children.map((child) => {
-              const childActive = pathMatches(pathname, child.to);
+        {!isSidebarOpen ? (
+          <div className="pointer-events-none absolute left-[66px] top-0 z-[200] min-w-[180px] translate-x-[-4px] rounded-xl border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] p-1 opacity-0 shadow-[var(--shadow-soft)] transition duration-150 group-hover/nav:pointer-events-auto group-hover/nav:translate-x-0 group-hover/nav:opacity-100 group-focus-within/nav:pointer-events-auto group-focus-within/nav:translate-x-0 group-focus-within/nav:opacity-100">
+            <div className="flex items-center gap-2.5 border-b border-[color:var(--border-1)] px-2.5 pb-2 pt-2 text-[12.5px] font-semibold text-[color:var(--text-1)]">
+              <span className="inline-flex w-4 min-w-4 items-center justify-center">
+                {def.icon}
+              </span>
+              <span>{def.label}</span>
+              {def.badge ? (
+                <span className={badgeClass()}>{def.badge}</span>
+              ) : null}
+            </div>
+            <div className="pt-1">
+              {def.children.map((child) => {
+                const childActive = pathMatches(pathname, child.to);
 
-              return (
-                <NavLink
-                  key={child.id}
-                  to={child.to}
-                  className={`hover-popup__item ${childActive ? "is-active" : ""}`}
-                  onClick={() => closeOnSmallScreen(closeForMobile)}
-                >
-                  <span>{child.label}</span>
-                  {child.badge ? (
-                    <span className="hover-popup__badge">{child.badge}</span>
-                  ) : null}
-                </NavLink>
-              );
-            })}
+                return (
+                  <NavLink
+                    key={child.id}
+                    to={child.to}
+                    className={cn(
+                      "flex min-h-[35px] items-center gap-2 rounded-lg px-2.5 text-[12.5px] transition",
+                      childActive
+                        ? "bg-[color:var(--surface-2)] text-[color:var(--text-1)]"
+                        : "text-[color:var(--text-2)] hover:bg-[color:var(--surface-2)] hover:text-[color:var(--text-1)]"
+                    )}
+                    onClick={() => closeOnSmallScreen(closeForMobile)}
+                  >
+                    <span>{child.label}</span>
+                    {child.badge ? (
+                      <span className={badgeClass()}>{child.badge}</span>
+                    ) : null}
+                  </NavLink>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
     );
   }
@@ -131,23 +185,46 @@ export function NavItem({ def }: NavItemProps) {
   }
 
   return (
-    <div className="nav-item">
+    <div className="group/nav relative">
       <NavLink
         to={def.to}
-        className={({ isActive: linkActive }) =>
-          `nav-item__row ${linkActive ? "is-active" : ""}`
-        }
+        className={({ isActive: linkActive }) => itemBaseClass(linkActive)}
         onClick={() => closeOnSmallScreen(closeForMobile)}
       >
-        <span className="nav-item__icon">{def.icon}</span>
-        <span className="nav-item__text">{def.label}</span>
-        {def.badge ? (
-          <span className="nav-item__badge">{def.badge}</span>
-        ) : null}
+        {({ isActive: linkActive }) => (
+          <>
+            {linkActive ? (
+              <span className="absolute inset-y-[5px] left-0 w-[2.5px] rounded-r-sm bg-[color:var(--brand-1)]" />
+            ) : null}
+            <span className="inline-flex w-4 min-w-4 items-center justify-center">
+              {def.icon}
+            </span>
+            <span
+              className={cn(
+                "overflow-hidden whitespace-nowrap text-[13px] font-medium transition-[max-width,opacity] duration-200",
+                isSidebarOpen ? "max-w-40 opacity-100" : "max-w-0 opacity-0"
+              )}
+            >
+              {def.label}
+            </span>
+            {def.badge ? (
+              <span
+                className={cn(
+                  badgeClass(),
+                  isSidebarOpen ? "opacity-100" : "hidden"
+                )}
+              >
+                {def.badge}
+              </span>
+            ) : null}
+          </>
+        )}
       </NavLink>
-      <div className="hover-label" aria-hidden={isSidebarOpen}>
-        {def.label}
-      </div>
+      {!isSidebarOpen ? (
+        <div className="pointer-events-none absolute left-[66px] top-1/2 z-[200] -translate-y-1/2 translate-x-[-4px] rounded-lg border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] px-[11px] py-[5px] text-[12.5px] font-medium text-[color:var(--text-1)] opacity-0 shadow-[var(--shadow-soft)] transition duration-150 group-hover/nav:pointer-events-auto group-hover/nav:translate-x-0 group-hover/nav:opacity-100">
+          {def.label}
+        </div>
+      ) : null}
     </div>
   );
 }
