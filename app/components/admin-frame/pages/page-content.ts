@@ -5,6 +5,21 @@ import type { AdminPlaceholderPage } from "./AdminPlaceholderPage";
 type AdminPageContent = ComponentProps<typeof AdminPlaceholderPage>;
 
 export const pageContent = {
+  dashboard: {
+    eyebrow: "Dashboard",
+    title: "Dashboard",
+    description: "Standard dashboard page when mock mode is disabled.",
+    sections: [
+      {
+        title: "Overview",
+        description: "This area will hold the dashboard summary widgets.",
+      },
+      {
+        title: "Activity",
+        description: "This area will hold the latest operational activity.",
+      },
+    ],
+  },
   eventsActive: {
     eyebrow: "Events",
     title: "Active Events",

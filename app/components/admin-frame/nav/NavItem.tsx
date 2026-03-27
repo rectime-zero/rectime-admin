@@ -58,7 +58,7 @@ function ChildLink({
             <span className="absolute inset-y-[5px] left-0 w-[2.5px] rounded-r-sm bg-[color:var(--brand-1)]" />
           ) : null}
           <span className="inline-flex w-4 min-w-4 items-center justify-center" />
-          <span className="overflow-hidden whitespace-nowrap text-[13px] font-medium opacity-100">
+          <span className="overflow-hidden text-[13px] font-medium whitespace-nowrap opacity-100">
             {child.label}
           </span>
           {child.badge ? (
@@ -104,7 +104,7 @@ export function NavItem({ def }: NavItemProps) {
           </span>
           <span
             className={cn(
-              "overflow-hidden whitespace-nowrap text-[13px] font-medium transition-[max-width,opacity] duration-200",
+              "overflow-hidden text-[13px] font-medium whitespace-nowrap transition-[max-width,opacity] duration-200",
               isSidebarOpen ? "max-w-40 opacity-100" : "max-w-0 opacity-0"
             )}
           >
@@ -140,8 +140,8 @@ export function NavItem({ def }: NavItemProps) {
           ))}
         </NavAccordion>
         {!isSidebarOpen ? (
-          <div className="pointer-events-none absolute left-[66px] top-0 z-[200] min-w-[180px] translate-x-[-4px] rounded-xl border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] p-1 opacity-0 shadow-[var(--shadow-soft)] transition duration-150 group-hover/nav:pointer-events-auto group-hover/nav:translate-x-0 group-hover/nav:opacity-100 group-focus-within/nav:pointer-events-auto group-focus-within/nav:translate-x-0 group-focus-within/nav:opacity-100">
-            <div className="flex items-center gap-2.5 border-b border-[color:var(--border-1)] px-2.5 pb-2 pt-2 text-[12.5px] font-semibold text-[color:var(--text-1)]">
+          <div className="pointer-events-none absolute top-0 left-[66px] z-[200] min-w-[180px] translate-x-[-4px] rounded-xl border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] p-1 opacity-0 shadow-[var(--shadow-soft)] transition duration-150 group-focus-within/nav:pointer-events-auto group-focus-within/nav:translate-x-0 group-focus-within/nav:opacity-100 group-hover/nav:pointer-events-auto group-hover/nav:translate-x-0 group-hover/nav:opacity-100">
+            <div className="flex items-center gap-2.5 border-b border-[color:var(--border-1)] px-2.5 pt-2 pb-2 text-[12.5px] font-semibold text-[color:var(--text-1)]">
               <span className="inline-flex w-4 min-w-4 items-center justify-center">
                 {def.icon}
               </span>
@@ -201,7 +201,7 @@ export function NavItem({ def }: NavItemProps) {
             </span>
             <span
               className={cn(
-                "overflow-hidden whitespace-nowrap text-[13px] font-medium transition-[max-width,opacity] duration-200",
+                "overflow-hidden text-[13px] font-medium whitespace-nowrap transition-[max-width,opacity] duration-200",
                 isSidebarOpen ? "max-w-40 opacity-100" : "max-w-0 opacity-0"
               )}
             >
@@ -221,7 +221,7 @@ export function NavItem({ def }: NavItemProps) {
         )}
       </NavLink>
       {!isSidebarOpen ? (
-        <div className="pointer-events-none absolute left-[66px] top-1/2 z-[200] -translate-y-1/2 translate-x-[-4px] rounded-lg border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] px-[11px] py-[5px] text-[12.5px] font-medium text-[color:var(--text-1)] opacity-0 shadow-[var(--shadow-soft)] transition duration-150 group-hover/nav:pointer-events-auto group-hover/nav:translate-x-0 group-hover/nav:opacity-100">
+        <div className="pointer-events-none absolute top-1/2 left-[66px] z-[200] translate-x-[-4px] -translate-y-1/2 rounded-lg border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] px-[11px] py-[5px] text-[12.5px] font-medium text-[color:var(--text-1)] opacity-0 shadow-[var(--shadow-soft)] transition duration-150 group-hover/nav:pointer-events-auto group-hover/nav:translate-x-0 group-hover/nav:opacity-100">
           {def.label}
         </div>
       ) : null}

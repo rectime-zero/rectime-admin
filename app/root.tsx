@@ -11,18 +11,7 @@ import type { Route } from "./+types/root";
 import { THEME_STORAGE_KEY } from "./lib/theme";
 import "./app.css";
 
-export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;700&display=swap",
-  },
-];
+export const links: Route.LinksFunction = () => [];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -79,10 +68,10 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   return (
     <main className="min-h-dvh p-6 md:p-8">
       <div className="mx-auto max-w-5xl rounded-[1.5rem] border border-[color:var(--border-1)] bg-[color:var(--surface-1)] p-6 shadow-[var(--shadow-soft)] md:p-8">
-        <div className="font-['DM_Mono'] text-xs uppercase tracking-[0.18em] text-[color:var(--brand-2)]">
+        <div className="font-['DM_Mono'] text-xs tracking-[0.18em] text-[color:var(--brand-2)] uppercase">
           Failure Boundary
         </div>
-        <h1 className="mt-3 text-[clamp(28px,4vw,40px)] font-semibold leading-[1.04]">
+        <h1 className="mt-3 text-[clamp(28px,4vw,40px)] leading-[1.04] font-semibold">
           {message}
         </h1>
         <p className="mt-3 max-w-[50ch] text-sm leading-7 text-[color:var(--text-2)]">

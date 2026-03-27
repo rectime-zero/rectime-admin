@@ -1,73 +1,34 @@
 import type { ComponentProps } from "react";
 
+import dashboardMock from "~/mock/dashboard.json";
+
 import type { AdminScreenPage } from "./AdminScreenPage";
 
 export type DashboardContent = ComponentProps<typeof AdminScreenPage>;
 
+type DashboardActivityTone = DashboardContent["activities"][number]["tone"];
+
+function normalizeTone(tone: string): DashboardActivityTone {
+  if (
+    tone === "green" ||
+    tone === "blue" ||
+    tone === "orange" ||
+    tone === "red"
+  ) {
+    return tone;
+  }
+
+  return "blue";
+}
+
 export const dashboardContent: DashboardContent = {
-  eyebrow: "Control Room",
-  title: "Live operations without losing the event-wide picture.",
-  description:
-    "Monitor active events, timing issues, staff load, and unresolved reports from one place. The frame stays narrow, explicit, and optimized for fast context switching.",
-  metrics: [
-    {
-      label: "Active events",
-      value: "03",
-      meta: "2 on-site / 1 remote venue",
-    },
-    {
-      label: "Pending checks",
-      value: "14",
-      meta: "Score sync and lane readiness",
-    },
-    {
-      label: "Response SLA",
-      value: "06m",
-      meta: "Median operator reaction time",
-    },
-  ],
-  activityTitle: "Recent operations",
-  activityHint: "Updated a few seconds ago",
-  activities: [
-    {
-      name: "Lane 4 timing offset adjusted",
-      meta: "Spring Cup 2026",
-      tone: "orange",
-      status: "Watch",
-    },
-    {
-      name: "Volunteer import completed",
-      meta: "146 rows normalized",
-      tone: "green",
-      status: "Done",
-    },
-    {
-      name: "Report export queued",
-      meta: "Summary package for directors",
-      tone: "blue",
-      status: "Queued",
-    },
-  ],
-  panelTitle: "Shift readiness",
-  panelHint: "Today",
-  checklist: [
-    {
-      name: "Head judge assignment",
-      meta: "Main arena",
-      tone: "green",
-      status: "Ready",
-    },
-    {
-      name: "Backup timer device",
-      meta: "Warm-up court",
-      tone: "orange",
-      status: "Check",
-    },
-    {
-      name: "Guest access pass",
-      meta: "Media desk",
-      tone: "red",
-      status: "Hold",
-    },
-  ],
+  ...dashboardMock,
+  activities: dashboardMock.activities.map((activity) => ({
+    ...activity,
+    tone: normalizeTone(activity.tone),
+  })),
+  checklist: dashboardMock.checklist.map((item) => ({
+    ...item,
+    tone: normalizeTone(item.tone),
+  })),
 };

@@ -1,25 +1,31 @@
 import { PanelLeftCloseIcon } from "lucide-react";
 
+import { currentUser } from "~/config/permissions";
 import { useNavState } from "~/hooks/useNavState";
 import { cn } from "~/lib/cn";
 
-import { settingsItem, NAV_SECTIONS } from "../nav/nav-config";
+import {
+  getVisibleNavSections,
+  getVisibleSettingsItem,
+} from "../nav/nav-config";
 import { NavItem } from "../nav/NavItem";
 import { NavSection } from "../nav/NavSection";
 
 export function AppSidebar() {
   const isOpen = useNavState((state) => state.isOpen);
   const toggle = useNavState((state) => state.toggle);
+  const sections = getVisibleNavSections(currentUser.role);
+  const settingsItem = getVisibleSettingsItem(currentUser.role);
 
   return (
     <aside className="flex min-h-0 flex-1 flex-col overflow-visible">
-      <div className="flex-1 overflow-y-auto overflow-x-visible px-2 py-3">
-        {NAV_SECTIONS.map((section) => (
+      <div className="flex-1 overflow-x-visible overflow-y-auto px-2 py-3">
+        {sections.map((section) => (
           <NavSection key={section.label} def={section} />
         ))}
       </div>
       <div className="border-t border-[color:var(--border-1)] p-2">
-        <NavItem def={settingsItem} />
+        {settingsItem ? <NavItem def={settingsItem} /> : null}
         <button
           type="button"
           className={cn(
@@ -38,7 +44,7 @@ export function AppSidebar() {
           </span>
           <span
             className={cn(
-              "overflow-hidden whitespace-nowrap text-[13px] font-medium transition-[max-width,opacity] duration-200",
+              "overflow-hidden text-[13px] font-medium whitespace-nowrap transition-[max-width,opacity] duration-200",
               isOpen ? "max-w-40 opacity-100" : "max-w-0 opacity-0"
             )}
           >

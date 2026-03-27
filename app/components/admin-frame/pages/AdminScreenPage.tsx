@@ -51,10 +51,10 @@ export function AdminScreenPage({
     <div className="flex flex-col gap-[18px]">
       <section className="grid gap-[18px] xl:grid-cols-[minmax(0,1.4fr)_minmax(280px,0.9fr)]">
         <div className="rounded-[18px] border border-[color:var(--border-1)] bg-[linear-gradient(180deg,var(--surface-card-gloss),transparent),var(--surface-1)] p-6 shadow-[var(--shadow-soft)]">
-          <div className="font-['DM_Mono'] text-xs uppercase tracking-[0.12em] text-[color:var(--brand-2)]">
+          <div className="font-['DM_Mono'] text-xs tracking-[0.12em] text-[color:var(--brand-2)] uppercase">
             {eyebrow}
           </div>
-          <h1 className="mt-2.5 text-[clamp(28px,4vw,40px)] font-semibold leading-[1.04]">
+          <h1 className="mt-2.5 text-[clamp(28px,4vw,40px)] leading-[1.04] font-semibold">
             {title}
           </h1>
           <p className="mt-3 max-w-[50ch] text-sm leading-7 text-[color:var(--text-2)]">
@@ -81,7 +81,7 @@ export function AdminScreenPage({
               </div>
               <span
                 className={cn(
-                  "inline-flex items-center justify-center rounded-full border px-2 py-1 font-['DM_Mono'] text-[10px] uppercase tracking-[0.04em]",
+                  "inline-flex items-center justify-center rounded-full border px-2 py-1 font-['DM_Mono'] text-[10px] tracking-[0.04em] uppercase",
                   toneClassName[item.tone]
                 )}
               >
@@ -98,10 +98,10 @@ export function AdminScreenPage({
             key={metric.label}
             className="rounded-[18px] border border-[color:var(--border-1)] bg-[linear-gradient(180deg,var(--surface-card-gloss),transparent),var(--surface-1)] p-[18px] shadow-[var(--shadow-soft)]"
           >
-            <div className="font-['DM_Mono'] text-[11px] uppercase tracking-[0.08em] text-[color:var(--text-3)]">
+            <div className="font-['DM_Mono'] text-[11px] tracking-[0.08em] text-[color:var(--text-3)] uppercase">
               {metric.label}
             </div>
-            <div className="mt-2.5 text-[30px] font-semibold leading-none">
+            <div className="mt-2.5 text-[30px] leading-none font-semibold">
               {metric.value}
             </div>
             <div className="mt-2 text-xs text-[color:var(--text-2)]">
@@ -131,7 +131,7 @@ export function AdminScreenPage({
             </div>
             <span
               className={cn(
-                "inline-flex items-center justify-center rounded-full border px-2 py-1 font-['DM_Mono'] text-[10px] uppercase tracking-[0.04em]",
+                "inline-flex items-center justify-center rounded-full border px-2 py-1 font-['DM_Mono'] text-[10px] tracking-[0.04em] uppercase",
                 toneClassName[activity.tone]
               )}
             >

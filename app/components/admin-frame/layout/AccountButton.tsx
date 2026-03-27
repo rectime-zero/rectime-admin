@@ -6,17 +6,16 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import type { AppRole } from "~/config/permissions";
 import { cn } from "~/lib/cn";
-
-type Role = "admin" | "operator" | "viewer";
 
 type AccountButtonProps = {
   name: string;
-  role: Role;
+  role: AppRole;
 };
 
 const roleStyle: Record<
-  Role,
+  AppRole,
   { border: string; bg: string; text: string; label: string }
 > = {
   admin: {
@@ -25,17 +24,17 @@ const roleStyle: Record<
     text: "#c4b5fd",
     label: "ADMIN",
   },
-  operator: {
+  manager: {
     border: "#38bdf8",
     bg: "rgba(56,189,248,0.14)",
     text: "#7dd3fc",
-    label: "OPE",
+    label: "MGR",
   },
-  viewer: {
+  member: {
     border: "#3b82f6",
     bg: "rgba(59,130,246,0.12)",
     text: "#60a5fa",
-    label: "VIEW",
+    label: "MEM",
   },
 };
 
@@ -94,8 +93,8 @@ export function AccountButton({ name, role }: AccountButtonProps) {
         />
       </button>
       {isOpen ? (
-        <div className="absolute right-0 top-[calc(100%+6px)] z-[140] min-w-[220px] rounded-xl border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] p-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
-          <div className="border-b border-[color:var(--border-1)] px-2 pb-2.5 pt-1">
+        <div className="absolute top-[calc(100%+6px)] right-0 z-[140] min-w-[220px] rounded-xl border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] p-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+          <div className="border-b border-[color:var(--border-1)] px-2 pt-1 pb-2.5">
             <div className="text-[13px] font-semibold">{name}</div>
             <div
               className="mt-2 inline-flex items-center justify-center rounded-full border px-[7px] py-[3px] text-[11px] font-bold tracking-[0.04em]"

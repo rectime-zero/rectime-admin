@@ -1,5 +1,6 @@
 import { BellIcon, PanelLeftOpenIcon, SearchIcon } from "lucide-react";
 
+import { currentUser } from "~/config/permissions";
 import { useNavState } from "~/hooks/useNavState";
 import { cn } from "~/lib/cn";
 
@@ -15,7 +16,7 @@ export function AppHeader() {
       <button
         type="button"
         className={cn(
-          "ml-3 mr-2 inline-flex h-8 w-8 items-center justify-center rounded-lg border transition md:hidden",
+          "mr-2 ml-3 inline-flex h-8 w-8 items-center justify-center rounded-lg border transition md:hidden",
           "border-[color:var(--border-2)] bg-transparent text-[color:var(--text-2)]",
           "hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface-2)] hover:text-[color:var(--text-1)]"
         )}
@@ -28,8 +29,8 @@ export function AppHeader() {
         <span className="inline-flex h-[26px] w-[26px] items-center justify-center rounded-md bg-[linear-gradient(135deg,var(--brand-1),var(--brand-2))] font-['DM_Mono'] text-xs font-bold text-slate-950">
           R
         </span>
-        <span className="whitespace-nowrap text-[15px] font-semibold tracking-[0.02em]">
-          rec<em className="not-italic text-[color:var(--brand-1)]">time</em>
+        <span className="text-[15px] font-semibold tracking-[0.02em] whitespace-nowrap">
+          rec<em className="text-[color:var(--brand-1)] not-italic">time</em>
         </span>
       </div>
       <div className="ml-0 md:ml-3">
@@ -63,9 +64,9 @@ export function AppHeader() {
           aria-label="Notifications"
         >
           <BellIcon size={15} strokeWidth={1.8} />
-          <span className="absolute right-[7px] top-[6px] h-[7px] w-[7px] rounded-full border-[1.5px] border-[color:var(--surface-1)] bg-[color:var(--brand-1)]" />
+          <span className="absolute top-[6px] right-[7px] h-[7px] w-[7px] rounded-full border-[1.5px] border-[color:var(--surface-1)] bg-[color:var(--brand-1)]" />
         </button>
-        <AccountButton name="Yuki Sato" role="operator" />
+        <AccountButton name={currentUser.name} role={currentUser.role} />
       </div>
     </header>
   );

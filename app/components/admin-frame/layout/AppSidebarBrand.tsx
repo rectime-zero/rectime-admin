@@ -11,11 +11,11 @@ export function AppSidebarBrand() {
       </span>
       <span
         className={cn(
-          "overflow-hidden whitespace-nowrap text-[15px] font-semibold tracking-[0.02em] transition-[max-width,opacity] duration-200",
+          "overflow-hidden text-[15px] font-semibold tracking-[0.02em] whitespace-nowrap transition-[max-width,opacity] duration-200",
           isOpen ? "max-w-32 opacity-100" : "max-w-0 opacity-0"
         )}
       >
-        rec<em className="not-italic text-[color:var(--brand-1)]">time</em>
+        rec<em className="text-[color:var(--brand-1)] not-italic">time</em>
       </span>
     </div>
   );

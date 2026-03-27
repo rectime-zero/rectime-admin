@@ -15,7 +15,7 @@ export function NavSection({ def }: NavSectionProps) {
     <section className="mt-[18px] first:mt-0">
       <div
         className={cn(
-          "overflow-hidden whitespace-nowrap px-2.5 pb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[color:var(--text-3)] transition-opacity duration-200",
+          "overflow-hidden px-2.5 pb-2 text-[10px] font-bold tracking-[0.12em] whitespace-nowrap text-[color:var(--text-3)] uppercase transition-opacity duration-200",
           isOpen ? "opacity-100" : "opacity-0"
         )}
       >

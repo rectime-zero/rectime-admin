@@ -57,7 +57,7 @@ export function EventSwitcher() {
         />
       </button>
       {isOpen ? (
-        <div className="absolute left-0 top-[calc(100%+6px)] z-[120] min-w-[220px] rounded-xl border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] p-1.5 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+        <div className="absolute top-[calc(100%+6px)] left-0 z-[120] min-w-[220px] rounded-xl border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] p-1.5 shadow-[var(--shadow-soft)] backdrop-blur-xl">
           {events.map((event) => (
             <button
               key={event.id}
