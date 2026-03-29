@@ -1,10 +1,21 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, startTransition } from "react";
+import { useNavigate } from "react-router";
 
+import { AuthErrorMessage } from "~/features/auth/components/AuthErrorMessage";
 import { AuthLayout } from "~/features/auth/components/AuthLayout";
 import { AuthPrimaryButton } from "~/features/auth/components/AuthPrimaryButton";
+import {
+  resolveEntryEndpointByEmail,
+  resolveEntryEndpointForOAuth,
+} from "~/features/auth/services/entryApi";
 
 export function AuthLoginPage() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [isEmailInputOpen, setIsEmailInputOpen] = useState(false);
+  const [isOAuthSubmitting, setIsOAuthSubmitting] = useState(false);
+  const [isEmailSubmitting, setIsEmailSubmitting] = useState(false);
   const emailInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -19,10 +30,80 @@ export function AuthLoginPage() {
     return () => window.clearTimeout(timeoutId);
   }, [isEmailInputOpen]);
 
+  async function handleOAuthLogin() {
+    try {
+      setErrorMessage("");
+      setIsOAuthSubmitting(true);
+
+      const resolution = await resolveEntryEndpointForOAuth();
+
+      startTransition(() => {
+        navigate(
+          `/login/endpoint?method=oauth&email=${encodeURIComponent(
+            resolution.email
+          )}&eventId=${encodeURIComponent(
+            resolution.eventId
+          )}&apiBaseUrl=${encodeURIComponent(resolution.apiBaseUrl)}`
+        );
+      });
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "OAuth ログインの開始に失敗しました。"
+      );
+    } finally {
+      setIsOAuthSubmitting(false);
+    }
+  }
+
+  async function handleEmailLogin() {
+    const normalizedEmail = email.trim().toLowerCase();
+    if (normalizedEmail.length === 0) {
+      setErrorMessage("メールアドレスを入力してください。");
+      return;
+    }
+
+    try {
+      setErrorMessage("");
+      setIsEmailSubmitting(true);
+
+      const resolution = await resolveEntryEndpointByEmail(normalizedEmail);
+      const params = new URLSearchParams({
+        email: normalizedEmail,
+      });
+
+      if (resolution) {
+        params.set("eventId", resolution.eventId);
+        params.set("apiBaseUrl", resolution.apiBaseUrl);
+      }
+
+      startTransition(() => {
+        navigate(`/login/email?${params.toString()}`);
+      });
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "メールログインの開始に失敗しました。"
+      );
+    } finally {
+      setIsEmailSubmitting(false);
+    }
+  }
+
   return (
     <AuthLayout contentClassName="flex w-full max-w-sm flex-1 flex-col justify-center">
       <div className="space-y-3">
-        <AuthPrimaryButton className="gap-3">
+        {errorMessage ? (
+          <AuthErrorMessage>{errorMessage}</AuthErrorMessage>
+        ) : null}
+
+        <AuthPrimaryButton
+          className="gap-3"
+          onClick={handleOAuthLogin}
+          disabled={isOAuthSubmitting || isEmailSubmitting}
+        >
           <svg
             aria-hidden="true"
             viewBox="0 0 21 21"
@@ -34,7 +115,9 @@ export function AuthLoginPage() {
             <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
             <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
           </svg>
-          Microsoft アカウントでログイン
+          {isOAuthSubmitting
+            ? "接続先を確認中..."
+            : "Microsoft アカウントでログイン"}
         </AuthPrimaryButton>
 
         <button
@@ -68,6 +151,14 @@ export function AuthLoginPage() {
                 <input
                   ref={emailInputRef}
                   type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      void handleEmailLogin();
+                    }
+                  }}
                   placeholder="you@example.com"
                   className="h-11 w-full rounded-lg border border-[color:var(--border-2)] bg-[color:var(--surface-1)] px-4 text-sm text-[color:var(--text-1)] transition outline-none placeholder:text-[color:var(--text-3)] focus:border-[color:var(--brand-1)] focus:ring-4 focus:ring-[color:var(--surface-brand-soft)]"
                 />
@@ -75,9 +166,13 @@ export function AuthLoginPage() {
 
               <button
                 type="button"
-                className="flex h-10 w-full cursor-pointer items-center justify-center rounded-lg border border-[color:var(--border-2)] bg-[color:var(--surface-1)] px-4 text-sm font-medium text-[color:var(--text-1)] transition hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface-2)] focus-visible:ring-2 focus-visible:ring-[color:var(--brand-1)]/30 focus-visible:outline-none"
+                onClick={() => void handleEmailLogin()}
+                disabled={isOAuthSubmitting || isEmailSubmitting}
+                className="flex h-10 w-full cursor-pointer items-center justify-center rounded-lg border border-[color:var(--border-2)] bg-[color:var(--surface-1)] px-4 text-sm font-medium text-[color:var(--text-1)] transition hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface-2)] focus-visible:ring-2 focus-visible:ring-[color:var(--brand-1)]/30 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60"
               >
-                メールで認証コードを受け取る
+                {isEmailSubmitting
+                  ? "接続先を確認中..."
+                  : "メールで認証コードを受け取る"}
               </button>
             </div>
           </div>

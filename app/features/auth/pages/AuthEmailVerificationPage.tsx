@@ -16,7 +16,8 @@ export function AuthEmailVerificationPage() {
       <div className="space-y-4">
         <p className="text-center text-base leading-7 font-medium text-white">
           {email}
-          に送信された6桁の認証コードを入力してください。認証コードは許可されたアカウントにのみ送信されます。
+          に確認用の認証コードを送信します。受信した 6
+          桁のコードを入力してログインを続けてください。
         </p>
 
         <div
@@ -35,11 +36,11 @@ export function AuthEmailVerificationPage() {
         </div>
 
         <AuthErrorMessage>
-          エラーが発生した場合はここにメッセージを表示します。
+          コードが届かない場合でも、この画面の挙動は接続先の適合有無で変えません。
         </AuthErrorMessage>
 
         <div className="space-y-3">
-          <AuthPrimaryButton>認証してログイン</AuthPrimaryButton>
+          <AuthPrimaryButton disabled>認証してログイン</AuthPrimaryButton>
 
           <Link
             to="/login"
