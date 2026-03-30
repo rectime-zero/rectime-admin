@@ -28,13 +28,13 @@ const roleStyle: Record<
     border: "#38bdf8",
     bg: "rgba(56,189,248,0.14)",
     text: "#7dd3fc",
-    label: "MGR",
+    label: "MG",
   },
   member: {
     border: "#3b82f6",
     bg: "rgba(59,130,246,0.12)",
     text: "#60a5fa",
-    label: "MEM",
+    label: "ME",
   },
 };
 

@@ -1,10 +1,10 @@
 import { BellIcon, PanelLeftOpenIcon, SearchIcon } from "lucide-react";
 
-import { currentUser } from "~/config/permissions";
 import { useNavState } from "~/hooks/useNavState";
 import { cn } from "~/lib/cn";
 
 import { AccountButton } from "./AccountButton";
+import { accountButtonContent } from "./account-button-content";
 import { EventSwitcher } from "./EventSwitcher";
 import { ThemeDevToggle } from "./ThemeDevToggle";
 
@@ -66,7 +66,10 @@ export function AppHeader() {
           <BellIcon size={15} strokeWidth={1.8} />
           <span className="absolute top-[6px] right-[7px] h-[7px] w-[7px] rounded-full border-[1.5px] border-[color:var(--surface-1)] bg-[color:var(--brand-1)]" />
         </button>
-        <AccountButton name={currentUser.name} role={currentUser.role} />
+        <AccountButton
+          name={accountButtonContent.name}
+          role={accountButtonContent.role}
+        />
       </div>
     </header>
   );
