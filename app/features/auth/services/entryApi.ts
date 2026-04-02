@@ -1,4 +1,5 @@
 import { env } from "~/config/env";
+import { authenticateWithMicrosoft } from "~/features/auth/services/firebaseAuth";
 
 export type ResolvedEntryEndpoint = {
   email: string;
@@ -6,9 +7,16 @@ export type ResolvedEntryEndpoint = {
   apiBaseUrl: string;
 };
 
+export type ResolvedOAuthSession = ResolvedEntryEndpoint & {
+  entryToken: string;
+  expiresIn: number;
+};
+
 type ResolveEntryApiResponse = {
   eventId: string | number;
   apiBaseUrl: string;
+  entryToken?: string;
+  expiresIn?: number;
 };
 
 type ResolveEntryApiError = {
@@ -68,25 +76,82 @@ export async function resolveEntryEndpointByEmail(
   };
 }
 
-export async function resolveEntryEndpointForOAuth(): Promise<ResolvedEntryEndpoint> {
-  if (!env.useMock && env.oauthMockEmail.length === 0) {
-    throw new Error("OAuth 連携はまだ接続されていません。");
+export async function resolveEntryEndpointForOAuth(): Promise<ResolvedOAuthSession> {
+  if (env.useMock || env.entryApiBaseUrl.length === 0) {
+    const mockEmail =
+      env.oauthMockEmail.length > 0 ? env.oauthMockEmail : MOCK_OAUTH_EMAIL;
+
+    const resolution = await resolveEntryEndpointByEmail(mockEmail);
+    if (!resolution) {
+      throw new Error(
+        "OAuth ログイン用の接続先イベントを解決できませんでした。"
+      );
+    }
+
+    return {
+      ...resolution,
+      entryToken: "mock-entry-token",
+      expiresIn: 300,
+    };
   }
 
-  const mockEmail =
-    env.oauthMockEmail.length > 0 ? env.oauthMockEmail : MOCK_OAUTH_EMAIL;
+  const authenticatedUser = await authenticateWithMicrosoft();
+  const response = await fetchEntryApi("/v1/resolve", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${authenticatedUser.idToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      appVersion: APP_VERSION,
+      platform: "web",
+    }),
+  });
 
-  const resolution = await resolveEntryEndpointByEmail(mockEmail);
-  if (!resolution) {
-    throw new Error("OAuth ログイン用の接続先イベントを解決できませんでした。");
+  if (!response.ok) {
+    const error = (await safeParseJson(
+      response
+    )) as ResolveEntryApiError | null;
+    throw new Error(
+      error?.message || "接続先イベント API の解決に失敗しました。"
+    );
   }
 
-  return resolution;
+  const data = (await response.json()) as ResolveEntryApiResponse;
+  if (
+    typeof data.entryToken !== "string" ||
+    data.entryToken.length === 0 ||
+    typeof data.expiresIn !== "number"
+  ) {
+    throw new Error("entry-api の OAuth 応答が不正です。");
+  }
+
+  return {
+    email: authenticatedUser.email,
+    eventId: String(data.eventId),
+    apiBaseUrl: data.apiBaseUrl,
+    entryToken: data.entryToken,
+    expiresIn: data.expiresIn,
+  };
 }
 
 function buildEntryApiUrl(pathname: string) {
   const baseUrl = env.entryApiBaseUrl.replace(/\/+$/, "");
   return `${baseUrl}${pathname}`;
+}
+
+async function fetchEntryApi(pathname: string, init: RequestInit) {
+  try {
+    return await fetch(buildEntryApiUrl(pathname), init);
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error(
+        "entry-api への接続に失敗しました。CORS 設定または API 起動 URL を確認してください。"
+      );
+    }
+
+    throw error;
+  }
 }
 
 async function safeParseJson(response: Response) {

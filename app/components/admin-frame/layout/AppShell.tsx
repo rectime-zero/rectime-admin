@@ -1,5 +1,7 @@
-import { Outlet } from "react-router";
+import { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router";
 
+import { loadAppSession } from "~/features/auth/services/authSession";
 import { useNavState } from "~/hooks/useNavState";
 import { cn } from "~/lib/cn";
 
@@ -9,6 +11,18 @@ import { AppSidebarBrand } from "./AppSidebarBrand";
 
 export function AppShell() {
   const isOpen = useNavState((state) => state.isOpen);
+  const navigate = useNavigate();
+  const [isAuthorized] = useState(() => loadAppSession() !== null);
+
+  useEffect(() => {
+    if (!isAuthorized) {
+      navigate("/login");
+    }
+  }, [isAuthorized, navigate]);
+
+  if (!isAuthorized) {
+    return null;
+  }
 
   return (
     <div className="flex min-h-dvh md:flex-row">

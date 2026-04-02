@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { AuthErrorMessage } from "~/features/auth/components/AuthErrorMessage";
 import { AuthLayout } from "~/features/auth/components/AuthLayout";
 import { AuthPrimaryButton } from "~/features/auth/components/AuthPrimaryButton";
+import { savePendingOAuthSession } from "~/features/auth/services/authSession";
 import {
   resolveEntryEndpointByEmail,
   resolveEntryEndpointForOAuth,
@@ -36,15 +37,17 @@ export function AuthLoginPage() {
       setIsOAuthSubmitting(true);
 
       const resolution = await resolveEntryEndpointForOAuth();
+      savePendingOAuthSession({
+        email: resolution.email,
+        eventId: resolution.eventId,
+        apiBaseUrl: resolution.apiBaseUrl,
+        entryToken: resolution.entryToken,
+        expiresIn: resolution.expiresIn,
+        resolvedAt: new Date().toISOString(),
+      });
 
       startTransition(() => {
-        navigate(
-          `/login/endpoint?method=oauth&email=${encodeURIComponent(
-            resolution.email
-          )}&eventId=${encodeURIComponent(
-            resolution.eventId
-          )}&apiBaseUrl=${encodeURIComponent(resolution.apiBaseUrl)}`
-        );
+        navigate("/login/endpoint?method=oauth");
       });
     } catch (error) {
       setErrorMessage(

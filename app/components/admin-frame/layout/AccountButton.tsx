@@ -12,6 +12,7 @@ import { cn } from "~/lib/cn";
 type AccountButtonProps = {
   name: string;
   role: AppRole;
+  onLogout?: () => void;
 };
 
 const roleStyle: Record<
@@ -38,7 +39,7 @@ const roleStyle: Record<
   },
 };
 
-export function AccountButton({ name, role }: AccountButtonProps) {
+export function AccountButton({ name, role, onLogout }: AccountButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const style = roleStyle[role];
@@ -124,7 +125,10 @@ export function AccountButton({ name, role }: AccountButtonProps) {
             <button
               type="button"
               className="flex h-[35px] w-full items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm text-[color:var(--text-1)] transition hover:bg-[color:var(--surface-2)]"
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                setIsOpen(false);
+                onLogout?.();
+              }}
             >
               <LogOutIcon size={14} strokeWidth={1.8} />
               <span>Log out</span>

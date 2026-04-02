@@ -1,4 +1,5 @@
 import type { AppRole } from "~/config/permissions";
+import { loadAppSession } from "~/features/auth/services/authSession";
 import accountButtonMock from "~/mock/account-button.json";
 
 type AccountButtonContent = {
@@ -14,7 +15,17 @@ function normalizeRole(role: string): AppRole {
   return "member";
 }
 
-export const accountButtonContent: AccountButtonContent = {
-  name: accountButtonMock.name,
-  role: normalizeRole(accountButtonMock.role),
-};
+export function getAccountButtonContent(): AccountButtonContent {
+  const session = loadAppSession();
+  if (session) {
+    return {
+      name: session.user.displayName,
+      role: session.user.appRole,
+    };
+  }
+
+  return {
+    name: accountButtonMock.name,
+    role: normalizeRole(accountButtonMock.role),
+  };
+}

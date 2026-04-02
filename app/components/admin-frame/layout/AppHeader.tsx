@@ -1,15 +1,28 @@
 import { BellIcon, PanelLeftOpenIcon, SearchIcon } from "lucide-react";
+import { useNavigate } from "react-router";
 
+import {
+  clearAppSession,
+  clearPendingOAuthSession,
+} from "~/features/auth/services/authSession";
 import { useNavState } from "~/hooks/useNavState";
 import { cn } from "~/lib/cn";
 
 import { AccountButton } from "./AccountButton";
-import { accountButtonContent } from "./account-button-content";
+import { getAccountButtonContent } from "./account-button-content";
 import { EventSwitcher } from "./EventSwitcher";
 import { ThemeDevToggle } from "./ThemeDevToggle";
 
 export function AppHeader() {
   const toggle = useNavState((state) => state.toggle);
+  const navigate = useNavigate();
+  const accountButtonContent = getAccountButtonContent();
+
+  function handleLogout() {
+    clearAppSession();
+    clearPendingOAuthSession();
+    navigate("/login");
+  }
 
   return (
     <header className="sticky top-0 z-30 flex h-[52px] items-center border-b border-[color:var(--border-1)] bg-[color:var(--surface-overlay)]/95 backdrop-blur-xl">
@@ -69,6 +82,7 @@ export function AppHeader() {
         <AccountButton
           name={accountButtonContent.name}
           role={accountButtonContent.role}
+          onLogout={handleLogout}
         />
       </div>
     </header>
