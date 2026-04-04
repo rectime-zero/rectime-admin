@@ -4,11 +4,6 @@ import { useNavigate } from "react-router";
 import { AuthErrorMessage } from "~/features/auth/components/AuthErrorMessage";
 import { AuthLayout } from "~/features/auth/components/AuthLayout";
 import { AuthPrimaryButton } from "~/features/auth/components/AuthPrimaryButton";
-import { savePendingOAuthSession } from "~/features/auth/services/authSession";
-import {
-  resolveEntryEndpointByEmail,
-  resolveEntryEndpointForOAuth,
-} from "~/features/auth/services/entryApi";
 
 export function AuthLoginPage() {
   const navigate = useNavigate();
@@ -36,24 +31,14 @@ export function AuthLoginPage() {
       setErrorMessage("");
       setIsOAuthSubmitting(true);
 
-      const resolution = await resolveEntryEndpointForOAuth();
-      savePendingOAuthSession({
-        email: resolution.email,
-        eventId: resolution.eventId,
-        apiBaseUrl: resolution.apiBaseUrl,
-        entryToken: resolution.entryToken,
-        expiresIn: resolution.expiresIn,
-        resolvedAt: new Date().toISOString(),
-      });
-
       startTransition(() => {
-        navigate("/login/endpoint?method=oauth");
+        navigate("/dashboard");
       });
     } catch (error) {
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : "OAuth ログインの開始に失敗しました。"
+          : "ログインの開始に失敗しました。"
       );
     } finally {
       setIsOAuthSubmitting(false);
@@ -71,15 +56,9 @@ export function AuthLoginPage() {
       setErrorMessage("");
       setIsEmailSubmitting(true);
 
-      const resolution = await resolveEntryEndpointByEmail(normalizedEmail);
       const params = new URLSearchParams({
         email: normalizedEmail,
       });
-
-      if (resolution) {
-        params.set("eventId", resolution.eventId);
-        params.set("apiBaseUrl", resolution.apiBaseUrl);
-      }
 
       startTransition(() => {
         navigate(`/login/email?${params.toString()}`);
@@ -119,7 +98,7 @@ export function AuthLoginPage() {
             <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
           </svg>
           {isOAuthSubmitting
-            ? "接続先を確認中..."
+            ? "ログイン中..."
             : "Microsoft アカウントでログイン"}
         </AuthPrimaryButton>
 
@@ -130,7 +109,7 @@ export function AuthLoginPage() {
           aria-expanded={isEmailInputOpen}
           aria-controls="email-login-section"
         >
-          {isEmailInputOpen ? "閉じる" : "その他の方法でログイン"}
+          {isEmailInputOpen ? "閉じる" : "そのほかの方法でログイン"}
         </button>
 
         <div
@@ -174,7 +153,7 @@ export function AuthLoginPage() {
                 className="flex h-10 w-full cursor-pointer items-center justify-center rounded-lg border border-[color:var(--border-2)] bg-[color:var(--surface-1)] px-4 text-sm font-medium text-[color:var(--text-1)] transition hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface-2)] focus-visible:ring-2 focus-visible:ring-[color:var(--brand-1)]/30 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isEmailSubmitting
-                  ? "接続先を確認中..."
+                  ? "確認中..."
                   : "メールで認証コードを受け取る"}
               </button>
             </div>

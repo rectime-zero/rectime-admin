@@ -1,10 +1,6 @@
 import { BellIcon, PanelLeftOpenIcon, SearchIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 
-import {
-  clearAppSession,
-  clearPendingOAuthSession,
-} from "~/features/auth/services/authSession";
 import { useNavState } from "~/hooks/useNavState";
 import { cn } from "~/lib/cn";
 
@@ -19,8 +15,6 @@ export function AppHeader() {
   const accountButtonContent = getAccountButtonContent();
 
   function handleLogout() {
-    clearAppSession();
-    clearPendingOAuthSession();
     navigate("/login");
   }
 
