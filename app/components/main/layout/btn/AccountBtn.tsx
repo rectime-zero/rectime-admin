@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 
 import type { AppRole } from "~/config/permissions";
 import { cn } from "~/lib/cn";
+import accountButtonMock from "~/mock/account-button.json";
 
 type AccountButtonProps = {
   name: string;
@@ -39,7 +40,7 @@ const roleStyle: Record<
   },
 };
 
-export function AccountButton({ name, role, onLogout }: AccountButtonProps) {
+export function AccountBtn({ name, role, onLogout }: AccountButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const style = roleStyle[role];
@@ -67,12 +68,10 @@ export function AccountButton({ name, role, onLogout }: AccountButtonProps) {
       <button
         type="button"
         className={cn(
-          "inline-flex h-[34px] items-center gap-2 rounded-xl border bg-transparent p-0.5 text-[color:var(--text-1)] transition",
-          "border-[color:var(--border-2)]",
-          "hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface-2)]",
-          isOpen
-            ? "border-[color:var(--border-strong)] bg-[color:var(--surface-2)]"
-            : ""
+          "app-rounded inline-flex h-full items-center gap-2 border bg-transparent p-0.5 text-(--text-1) transition",
+          "border-(--border-2)",
+          "hover:border-(--border-strong) hover:bg-(--surface-2)",
+          isOpen ? "border-(--border-strong) bg-(--surface-2)" : ""
         )}
         onClick={() => setIsOpen((value) => !value)}
       >
@@ -90,12 +89,12 @@ export function AccountButton({ name, role, onLogout }: AccountButtonProps) {
         <ChevronDownIcon
           size={14}
           strokeWidth={1.8}
-          className="mr-2 text-[color:var(--text-3)]"
+          className="mr-2 text-(--text-3)"
         />
       </button>
       {isOpen ? (
-        <div className="absolute top-[calc(100%+6px)] right-0 z-[140] min-w-[220px] rounded-xl border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] p-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
-          <div className="border-b border-[color:var(--border-1)] px-2 pt-1 pb-2.5">
+        <div className="absolute top-[calc(100%+6px)] right-0 z-140 min-w-[220px] rounded-xl border border-(--border-2) bg-(--surface-overlay-strong) p-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+          <div className="border-b border-(--border-1) px-2 pt-1 pb-2.5">
             <div className="text-[13px] font-semibold">{name}</div>
             <div
               className="mt-2 inline-flex items-center justify-center rounded-full border px-[7px] py-[3px] text-[11px] font-bold tracking-[0.04em]"
@@ -107,7 +106,7 @@ export function AccountButton({ name, role, onLogout }: AccountButtonProps) {
           <div className="pt-2">
             <button
               type="button"
-              className="flex h-[35px] w-full items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm text-[color:var(--text-1)] transition hover:bg-[color:var(--surface-2)]"
+              className="flex h-[35px] w-full items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm text-(--text-1) transition hover:bg-(--surface-2)"
               onClick={() => setIsOpen(false)}
             >
               <User2Icon size={14} strokeWidth={1.8} />
@@ -115,16 +114,16 @@ export function AccountButton({ name, role, onLogout }: AccountButtonProps) {
             </button>
             <button
               type="button"
-              className="flex h-[35px] w-full items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm text-[color:var(--text-1)] transition hover:bg-[color:var(--surface-2)]"
+              className="flex h-[35px] w-full items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm text-(--text-1) transition hover:bg-(--surface-2)"
               onClick={() => setIsOpen(false)}
             >
               <SettingsIcon size={14} strokeWidth={1.8} />
               <span>Preferences</span>
             </button>
-            <div className="mx-1 my-1.5 h-px bg-[color:var(--border-1)]" />
+            <div className="mx-1 my-1.5 h-px bg-(--border-1)" />
             <button
               type="button"
-              className="flex h-[35px] w-full items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm text-[color:var(--text-1)] transition hover:bg-[color:var(--surface-2)]"
+              className="flex h-[35px] w-full items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm text-(--text-1) transition hover:bg-(--surface-2)"
               onClick={() => {
                 setIsOpen(false);
                 onLogout?.();

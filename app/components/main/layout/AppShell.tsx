@@ -6,7 +6,8 @@ import { cn } from "~/lib/cn";
 import { MainHeader } from "./MainHeader";
 import { AppSidebar } from "./AppSidebar";
 import { AppSidebarBrand } from "./AppSidebarBrand";
-import { LeftNavigation } from "~/components/main/layout/LeftNavigation";
+import { LeftNavigationHeader } from "~/components/main/layout/LeftNavigationHeader";
+import { NavigationContent } from "~/components/main/layout/NavigationContent";
 
 export function AppShell() {
   const isOpen = useNavState((state) => state.isOpen);
@@ -14,9 +15,10 @@ export function AppShell() {
   return (
     <div className="flex min-h-dvh md:flex-row">
       {/* LeftNavigation */}
-      <div>
-        <LeftNavigation />
-      </div>
+      {/*<div>*/}
+      {/*  <LeftNavigationHeader />*/}
+      {/*  <NavigationContent />*/}
+      {/*</div>*/}
       <div
         className={cn(
           "fixed inset-y-[52px] left-0 z-40 flex translate-x-[-224px] flex-col overflow-visible border-r bg-[color:var(--surface-overlay)] backdrop-blur-xl transition-[width,min-width,transform] duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] md:static md:min-h-dvh md:translate-x-0",

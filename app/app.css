@@ -125,6 +125,14 @@ input {
   background: color-mix(in srgb, var(--brand-1) 28%, transparent);
 }
 
+.header-height {
+  height: 52px;
+}
+
+.app-rounded {
+  border-radius: 8px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

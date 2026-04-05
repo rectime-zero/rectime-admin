@@ -9,7 +9,7 @@ const events = [
   { id: "autumn-finals", label: "Autumn Finals", meta: "Saitama Super Arena" },
 ];
 
-export function EventSwitcher() {
+export function ProjectSwitcherBtn() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(events[0].id);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ export function EventSwitcher() {
       <button
         type="button"
         className={cn(
-          "inline-flex items-center gap-[7px] rounded-lg border px-[11px] py-[5px] text-[12.5px] font-medium transition",
+          "app-rounded inline-flex h-full items-center gap-[7px] border px-[11px] py-[5px] text-[12.5px] font-medium transition",
           "border-[color:var(--border-2)] bg-transparent text-[color:var(--text-1)]",
           "hover:border-[color:var(--border-strong)] hover:bg-[color:var(--surface-2)]",
           isOpen

@@ -1,4 +1,8 @@
 {
-  "name": "Yuki Sato",
-  "role": "manager"
+  "name": "HAL太郎",
+  "role": "Admin",
+  "abbr_label": "AD",
+  "borderColor": "fff,",
+  "bgColor": "fff,",
+  "textColor": "fff,"
 }
