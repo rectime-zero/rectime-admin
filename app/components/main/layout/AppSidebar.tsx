@@ -7,9 +7,9 @@ import { cn } from "~/lib/cn";
 import {
   getVisibleNavSections,
   getVisibleSettingsItem,
-} from "../nav/nav-config";
-import { NavItem } from "../nav/NavItem";
-import { NavSection } from "../nav/NavSection";
+} from "~/components/main/sidebar/nav-config";
+import { NavItem } from "~/components/main/sidebar/NavItem";
+import { NavSection } from "~/components/main/sidebar/NavSection";
 
 export function AppSidebar() {
   const isOpen = useNavState((state) => state.isOpen);

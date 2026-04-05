@@ -9,7 +9,7 @@ import { getAccountButtonContent } from "./account-button-content";
 import { EventSwitcher } from "./EventSwitcher";
 import { ThemeDevToggle } from "./ThemeDevToggle";
 
-export function AppHeader() {
+export function MainHeader() {
   const toggle = useNavState((state) => state.toggle);
   const navigate = useNavigate();
   const accountButtonContent = getAccountButtonContent();

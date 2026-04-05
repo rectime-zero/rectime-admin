@@ -3,15 +3,20 @@ import { Outlet } from "react-router";
 import { useNavState } from "~/hooks/useNavState";
 import { cn } from "~/lib/cn";
 
-import { AppHeader } from "./AppHeader";
+import { MainHeader } from "./MainHeader";
 import { AppSidebar } from "./AppSidebar";
 import { AppSidebarBrand } from "./AppSidebarBrand";
+import { LeftNavigation } from "~/components/main/layout/LeftNavigation";
 
 export function AppShell() {
   const isOpen = useNavState((state) => state.isOpen);
 
   return (
     <div className="flex min-h-dvh md:flex-row">
+      {/* LeftNavigation */}
+      <div>
+        <LeftNavigation />
+      </div>
       <div
         className={cn(
           "fixed inset-y-[52px] left-0 z-40 flex translate-x-[-224px] flex-col overflow-visible border-r bg-[color:var(--surface-overlay)] backdrop-blur-xl transition-[width,min-width,transform] duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] md:static md:min-h-dvh md:translate-x-0",
@@ -23,8 +28,9 @@ export function AppShell() {
         <AppSidebarBrand />
         <AppSidebar />
       </div>
+      {/* MainArea */}
       <div className="flex min-h-dvh min-w-0 flex-1 flex-col">
-        <AppHeader />
+        <MainHeader />
         <main className="flex-1 overflow-auto p-[18px] md:p-6">
           <Outlet />
         </main>
