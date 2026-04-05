@@ -2,7 +2,7 @@ import { AdminPlaceholderPage } from "~/components/admin-frame/pages/AdminPlaceh
 import { pageContent } from "~/components/admin-frame/pages/page-content";
 
 export function meta() {
-  return [{ title: "Sports List | Rectime Admin" }];
+  return [{ title: "Sports List | recwatch" }];
 }
 
 export default function SportsRoute() {

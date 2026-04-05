@@ -2,7 +2,7 @@ import { AdminPlaceholderPage } from "~/components/admin-frame/pages/AdminPlaceh
 import { pageContent } from "~/components/admin-frame/pages/page-content";
 
 export function meta() {
-  return [{ title: "Schedule | Rectime Admin" }];
+  return [{ title: "Schedule | recwatch" }];
 }
 
 export default function ScheduleRoute() {

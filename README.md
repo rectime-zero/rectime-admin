@@ -1,4 +1,4 @@
-# rectime-admin
+# recwatch
 
 管理画面です。
 

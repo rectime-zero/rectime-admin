@@ -2,7 +2,7 @@ import { AdminPlaceholderPage } from "~/components/admin-frame/pages/AdminPlaceh
 import { pageContent } from "~/components/admin-frame/pages/page-content";
 
 export function meta() {
-  return [{ title: "Past Events | Rectime Admin" }];
+  return [{ title: "Past Events | recwatch" }];
 }
 
 export default function EventsPastRoute() {

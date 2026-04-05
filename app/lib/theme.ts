@@ -1,4 +1,4 @@
-export const THEME_STORAGE_KEY = "rectime-admin-theme";
+export const THEME_STORAGE_KEY = "recwatch-theme";
 
 export type ThemeMode = "dark" | "light";
 

@@ -2,7 +2,7 @@ import { AdminPlaceholderPage } from "~/components/admin-frame/pages/AdminPlaceh
 import { pageContent } from "~/components/admin-frame/pages/page-content";
 
 export function meta() {
-  return [{ title: "Teams | Rectime Admin" }];
+  return [{ title: "Teams | recwatch" }];
 }
 
 export default function MembersTeamsRoute() {

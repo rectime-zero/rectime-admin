@@ -2,7 +2,7 @@ import { AdminPlaceholderPage } from "~/components/admin-frame/pages/AdminPlaceh
 import { pageContent } from "~/components/admin-frame/pages/page-content";
 
 export function meta() {
-  return [{ title: "Settings | Rectime Admin" }];
+  return [{ title: "Settings | recwatch" }];
 }
 
 export default function SettingsRoute() {
