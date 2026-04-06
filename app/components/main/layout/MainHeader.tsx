@@ -2,15 +2,13 @@ import { useNavigate } from "react-router";
 
 import { SearchBtn } from "~/components/main/layout/btn/SearchBtn";
 import { NoticeBtn } from "~/components/main/layout/btn/NoticeBtn";
-import { AccountBtn } from "~/components/main/layout/btn/AccountBtn";
-import { getAccountButtonContent } from "./account-button-content";
+import { AccountBtn } from "~/components/main/layout/btn/AccountBtn/AccountBtn";
 import { ProjectSwitcherBtn } from "~/components/main/layout/btn/ProjectSwitcherBtn";
 import { ThemeDevToggle } from "./ThemeDevToggle";
 import { MobileHamburgerMenuBtn } from "~/components/main/layout/btn/MobileHamburgerMenuBtn";
 
 export function MainHeader() {
   const navigate = useNavigate();
-  const accountButtonContent = getAccountButtonContent();
 
   function handleLogout() {
     navigate("/login");
@@ -24,16 +22,12 @@ export function MainHeader() {
       </div>
 
       {/* 後で削除 */}
-      {/*<ThemeDevToggle />*/}
+      <ThemeDevToggle />
 
       <div className="flex h-full gap-1">
         <SearchBtn />
         <NoticeBtn />
-        <AccountBtn
-          name={accountButtonContent.name}
-          role={accountButtonContent.role}
-          onLogout={handleLogout}
-        />
+        <AccountBtn onLogout={handleLogout} />
       </div>
     </header>
   );

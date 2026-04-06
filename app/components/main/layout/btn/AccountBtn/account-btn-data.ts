@@ -1,0 +1,14 @@
+import accountButtonMock from "~/mock/account-button.json";
+
+export type AccountBtnData = {
+  name: string;
+  role: string;
+  abbr_label: string;
+  borderColor: string;
+  bgColor: string;
+  textColor: string;
+};
+
+export function getAccountBtnData(): AccountBtnData {
+  return accountButtonMock;
+}
