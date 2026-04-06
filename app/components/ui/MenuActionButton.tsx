@@ -1,14 +1,11 @@
 import type { ReactNode } from "react";
 
-type AccountMenuActionButtonProps = {
+type MenuActionButtonProps = {
   content: ReactNode;
   onClick: () => void;
 };
 
-export function AccountMenuActionButton({
-  content,
-  onClick,
-}: AccountMenuActionButtonProps) {
+export function MenuActionButton({ content, onClick }: MenuActionButtonProps) {
   return (
     <button
       type="button"

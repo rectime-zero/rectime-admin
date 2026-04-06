@@ -2,7 +2,7 @@ import type { NavSectionDef } from "~/types/nav";
 import { useNavState } from "~/hooks/useNavState";
 import { cn } from "~/lib/cn";
 
-import { NavItem } from "./NavItem";
+import { NavItem } from "~/features/frame/left-navigation/components/NavItem";
 
 type NavSectionProps = {
   def: NavSectionDef;

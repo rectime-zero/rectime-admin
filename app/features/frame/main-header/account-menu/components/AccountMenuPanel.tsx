@@ -6,9 +6,9 @@ import {
   User2Icon,
 } from "lucide-react";
 
-import { AccountMenuActionButton } from "~/components/main/AccountMenuActionButton";
+import { MenuActionButton } from "~/components/ui/MenuActionButton";
 import { useThemeMode } from "~/hooks/useThemeMode";
-import type { AccountBtnData } from "~/components/main/layout/btn/AccountBtn/account-btn-data";
+import type { AccountBtnData } from "~/features/frame/main-header/account-menu/model/account-btn-data";
 
 type AccountMenuPanelProps = {
   account: AccountBtnData;
@@ -69,7 +69,7 @@ export function AccountMenuPanel({
       <div className="mx-1 my-1.5 h-px bg-(--border-1)" />
 
       {/* ここにライトモードダークモード切り替えボタン */}
-      <AccountMenuActionButton
+      <MenuActionButton
         content={
           <>
             {isDark ? (
@@ -87,7 +87,7 @@ export function AccountMenuPanel({
 
       <div className="">
         {accountMenuItems.map(({ icon: Icon, label }) => (
-          <AccountMenuActionButton
+          <MenuActionButton
             key={label}
             content={
               <>

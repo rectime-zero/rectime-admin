@@ -5,7 +5,7 @@ import { useNavState } from "~/hooks/useNavState";
 import { cn } from "~/lib/cn";
 import type { NavChildDef, NavItemDef } from "~/types/nav";
 
-import { NavAccordion } from "./NavAccordion";
+import { NavAccordion } from "~/features/frame/left-navigation/components/NavAccordion";
 
 type NavItemProps = {
   def: NavItemDef;

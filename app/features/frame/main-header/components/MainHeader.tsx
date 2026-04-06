@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router";
 
-import { SearchBtn } from "~/components/main/layout/btn/SearchBtn";
-import { NoticeBtn } from "~/components/main/layout/btn/NoticeBtn";
-import { AccountBtn } from "~/components/main/layout/btn/AccountBtn/AccountBtn";
-import { ProjectSwitcherBtn } from "~/components/main/layout/btn/ProjectSwitcherBtn";
-import { MobileHamburgerMenuBtn } from "~/components/main/layout/btn/MobileHamburgerMenuBtn";
+import { SearchBtn } from "~/features/frame/main-header/components/SearchBtn";
+import { NoticeBtn } from "~/features/frame/main-header/components/NoticeBtn";
+import { AccountBtn } from "~/features/frame/main-header/account-menu/components/AccountBtn";
+import { ProjectSwitcherBtn } from "~/features/frame/main-header/components/ProjectSwitcherBtn";
+import { MobileHamburgerMenuBtn } from "~/features/frame/main-header/components/MobileHamburgerMenuBtn";
 
 export function MainHeader() {
   const navigate = useNavigate();

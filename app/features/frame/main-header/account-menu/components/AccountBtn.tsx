@@ -1,7 +1,7 @@
-import { AccountMenuBtn } from "~/components/main/layout/btn/AccountBtn/AccountMenuBtn";
-import { AccountMenuPanel } from "~/components/main/layout/btn/AccountBtn/AccountMenuPanel";
-import { getAccountBtnData } from "~/components/main/layout/btn/AccountBtn/account-btn-data";
-import { useAccountBtn } from "~/components/main/layout/btn/AccountBtn/useAccountBtn";
+import { AccountMenuBtn } from "~/features/frame/main-header/account-menu/components/AccountMenuBtn";
+import { AccountMenuPanel } from "~/features/frame/main-header/account-menu/components/AccountMenuPanel";
+import { getAccountBtnData } from "~/features/frame/main-header/account-menu/model/account-btn-data";
+import { useAccountBtn } from "~/features/frame/main-header/account-menu/hooks/useAccountBtn";
 
 type AccountBtnProps = {
   onLogout?: () => void;
