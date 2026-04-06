@@ -1,4 +1,4 @@
-import accountButtonMock from "~/mock/account-button.json";
+import accountButtonMock from "~/mock/frame/account-button.json";
 
 export type AccountBtnData = {
   name: string;
