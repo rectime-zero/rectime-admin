@@ -1,6 +1,13 @@
-import { LogOutIcon, SettingsIcon, User2Icon } from "lucide-react";
+import {
+  LogOutIcon,
+  MoonStarIcon,
+  SettingsIcon,
+  SunMediumIcon,
+  User2Icon,
+} from "lucide-react";
 
 import { AccountMenuActionButton } from "~/components/main/AccountMenuActionButton";
+import { useThemeMode } from "~/hooks/useThemeMode";
 import type { AccountBtnData } from "~/components/main/layout/btn/AccountBtn/account-btn-data";
 
 type AccountMenuPanelProps = {
@@ -11,7 +18,7 @@ type AccountMenuPanelProps = {
 
 const accountMenuItems = [
   { icon: User2Icon, label: "Profile" },
-  { icon: SettingsIcon, label: "Preferences" },
+  { icon: SettingsIcon, label: "Settings" },
 ];
 
 export function AccountMenuPanel({
@@ -19,35 +26,81 @@ export function AccountMenuPanel({
   onClose,
   onLogout,
 }: AccountMenuPanelProps) {
+  const { theme, toggleTheme } = useThemeMode();
+  const isDark = theme === "dark";
+
   return (
-    <div className="absolute top-[calc(100%+6px)] right-0 z-140 min-w-[220px] rounded-xl border border-(--border-2) bg-(--surface-overlay-strong) p-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
-      <div className="border-b border-(--border-1) px-2 pt-1 pb-2.5">
-        <div className="text-[13px] font-semibold">{account.name}</div>
-        <div
-          className="mt-2 inline-flex items-center justify-center rounded-full border px-[7px] py-[3px] text-[11px] font-bold tracking-[0.04em]"
-          style={{
-            color: account.textColor,
-            background: account.bgColor,
-            borderColor: account.borderColor,
-          }}
-        >
-          {account.role}
+    <div className="absolute top-[calc(100%+6px)] right-0 z-140 rounded-xl border border-(--border-2) bg-(--surface-overlay-strong) p-2 shadow-(--shadow-soft) backdrop-blur-xl">
+      <div className="px-2 py-2">
+        <div className="flex h-10 items-center gap-3">
+          {/* アカウントの画像 */}
+          <div
+            className="flex aspect-square h-full shrink-0 items-center justify-center rounded-full border-2 p-0.5"
+            style={{ borderColor: account.borderColor }}
+          >
+            <div className="h-full w-full overflow-hidden rounded-full bg-amber-200">
+              <img
+                className="aspect-square h-full object-cover"
+                src={account.imageUrl}
+                alt={account.name}
+              />
+            </div>
+          </div>
+          {/* 右側名前とロール */}
+          <div className="flex h-full flex-col justify-between pr-4">
+            <span className="app-text-small relative -top-1 block h-2 font-semibold whitespace-nowrap">
+              {account.name}
+            </span>
+            <span
+              className="flex items-center justify-center rounded-full border px-0.5 py-px text-[10px] font-bold tracking-[0.04em]"
+              style={{
+                color: account.textColor,
+                background: account.bgColor,
+                borderColor: account.borderColor,
+              }}
+            >
+              {account.role}
+            </span>
+          </div>
         </div>
       </div>
-      <div className="pt-2">
+
+      {/* 棒 */}
+      <div className="mx-1 my-1.5 h-px bg-(--border-1)" />
+
+      {/* ここにライトモードダークモード切り替えボタン */}
+      <AccountMenuActionButton
+        content={
+          <>
+            {isDark ? (
+              <MoonStarIcon size={14} strokeWidth={1.8} />
+            ) : (
+              <SunMediumIcon size={14} strokeWidth={1.8} />
+            )}
+            <span className="app-text-small">
+              {isDark ? "Dark mode" : "Light mode"}
+            </span>
+          </>
+        }
+        onClick={toggleTheme}
+      />
+
+      <div className="">
         {accountMenuItems.map(({ icon: Icon, label }) => (
           <AccountMenuActionButton
             key={label}
             content={
               <>
                 <Icon size={14} strokeWidth={1.8} />
-                <span>{label}</span>
+                <span className="app-text-small">{label}</span>
               </>
             }
             onClick={onClose}
           />
         ))}
+        {/* 棒 */}
         <div className="mx-1 my-1.5 h-px bg-(--border-1)" />
+        {/* ログアウト */}
         <button
           type="button"
           className="flex h-8.5 w-full cursor-pointer items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm transition hover:bg-red-500/5"
@@ -57,7 +110,7 @@ export function AccountMenuPanel({
           }}
         >
           <LogOutIcon className="text-red-400" size={14} strokeWidth={1.8} />
-          <span className="text-red-400">Log out</span>
+          <span className="app-text-small text-red-400">Log out</span>
         </button>
       </div>
     </div>

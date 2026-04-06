@@ -129,6 +129,10 @@ input {
   border-radius: 8px;
 }
 
+.app-text-small {
+  font-size: 14px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

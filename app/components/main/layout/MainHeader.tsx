@@ -4,7 +4,6 @@ import { SearchBtn } from "~/components/main/layout/btn/SearchBtn";
 import { NoticeBtn } from "~/components/main/layout/btn/NoticeBtn";
 import { AccountBtn } from "~/components/main/layout/btn/AccountBtn/AccountBtn";
 import { ProjectSwitcherBtn } from "~/components/main/layout/btn/ProjectSwitcherBtn";
-import { ThemeDevToggle } from "./ThemeDevToggle";
 import { MobileHamburgerMenuBtn } from "~/components/main/layout/btn/MobileHamburgerMenuBtn";
 
 export function MainHeader() {
@@ -20,9 +19,6 @@ export function MainHeader() {
         <MobileHamburgerMenuBtn />
         <ProjectSwitcherBtn />
       </div>
-
-      {/* 後で削除 */}
-      <ThemeDevToggle />
 
       <div className="flex h-full gap-1">
         <SearchBtn />
