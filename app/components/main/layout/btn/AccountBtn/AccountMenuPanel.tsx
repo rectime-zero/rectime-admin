@@ -1,5 +1,6 @@
 import { LogOutIcon, SettingsIcon, User2Icon } from "lucide-react";
 
+import { AccountMenuActionButton } from "~/components/main/AccountMenuActionButton";
 import type { AccountBtnData } from "~/components/main/layout/btn/AccountBtn/account-btn-data";
 
 type AccountMenuPanelProps = {
@@ -7,6 +8,11 @@ type AccountMenuPanelProps = {
   onClose: () => void;
   onLogout?: () => void;
 };
+
+const accountMenuItems = [
+  { icon: User2Icon, label: "Profile" },
+  { icon: SettingsIcon, label: "Preferences" },
+];
 
 export function AccountMenuPanel({
   account,
@@ -29,33 +35,29 @@ export function AccountMenuPanel({
         </div>
       </div>
       <div className="pt-2">
-        <button
-          type="button"
-          className="flex h-[35px] w-full items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm text-(--text-1) transition hover:bg-(--surface-2)"
-          onClick={onClose}
-        >
-          <User2Icon size={14} strokeWidth={1.8} />
-          <span>Profile</span>
-        </button>
-        <button
-          type="button"
-          className="flex h-[35px] w-full items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm text-(--text-1) transition hover:bg-(--surface-2)"
-          onClick={onClose}
-        >
-          <SettingsIcon size={14} strokeWidth={1.8} />
-          <span>Preferences</span>
-        </button>
+        {accountMenuItems.map(({ icon: Icon, label }) => (
+          <AccountMenuActionButton
+            key={label}
+            content={
+              <>
+                <Icon size={14} strokeWidth={1.8} />
+                <span>{label}</span>
+              </>
+            }
+            onClick={onClose}
+          />
+        ))}
         <div className="mx-1 my-1.5 h-px bg-(--border-1)" />
         <button
           type="button"
-          className="flex h-[35px] w-full items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm text-(--text-1) transition hover:bg-(--surface-2)"
+          className="flex h-8.5 w-full cursor-pointer items-center gap-2.5 rounded-md bg-transparent px-2.5 text-left text-sm transition hover:bg-red-500/5"
           onClick={() => {
             onClose();
             onLogout?.();
           }}
         >
-          <LogOutIcon size={14} strokeWidth={1.8} />
-          <span>Log out</span>
+          <LogOutIcon className="text-red-400" size={14} strokeWidth={1.8} />
+          <span className="text-red-400">Log out</span>
         </button>
       </div>
     </div>
