@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-import type { AdminPlaceholderPage } from "./AdminPlaceholderPage";
+import type { AdminPlaceholderPage } from "~/features/admin-pages/components/AdminPlaceholderPage";
 
 type AdminPageContent = ComponentProps<typeof AdminPlaceholderPage>;
 

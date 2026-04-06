@@ -1,5 +1,5 @@
-import { AdminScreenPage } from "~/components/auth/pages/AdminScreenPage";
-import { dashboardContent } from "~/components/auth/pages/dashboard-content";
+import { AdminScreenPage } from "~/features/admin-pages/components/AdminScreenPage";
+import { dashboardContent } from "~/features/admin-pages/model/dashboard-content";
 
 export function meta() {
   return [{ title: "Dashboard | recwatch" }];

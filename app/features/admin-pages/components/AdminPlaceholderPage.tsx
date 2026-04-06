@@ -1,4 +1,4 @@
-import { AdminPageTitle } from "./AdminPageTitle";
+import { AdminPageTitle } from "~/features/admin-pages/components/AdminPageTitle";
 
 type PlaceholderSection = {
   title: string;
