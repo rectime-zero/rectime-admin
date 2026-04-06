@@ -41,8 +41,8 @@ export function AccountMenuBtn({
         <div className="h-full w-full overflow-hidden rounded-full bg-amber-200">
           <img
             className="aspect-square h-full object-cover"
-            src="https://picsum.photos/800/600?random=1"
-            alt="usericon"
+            src={account.imageUrl}
+            alt={account.name}
           />
         </div>
       </div>

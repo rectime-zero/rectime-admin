@@ -3,6 +3,7 @@ import accountButtonMock from "~/mock/account-button.json";
 export type AccountBtnData = {
   name: string;
   role: string;
+  imageUrl: string;
   abbr_label: string;
   borderColor: string;
   bgColor: string;
