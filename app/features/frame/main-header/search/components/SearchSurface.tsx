@@ -1,4 +1,4 @@
-import { CommandIcon, SearchIcon, XIcon } from "lucide-react";
+import { SearchIcon, XIcon } from "lucide-react";
 
 import { cn } from "~/lib/cn";
 
@@ -23,7 +23,7 @@ export function SearchSurface({
     <div
       className={cn(
         "flex items-center gap-3 transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)]",
-        isOpen ? "h-14 border-b border-(--border-1) px-3" : "h-full"
+        isOpen ? "h-14 border-b border-(--border-1) px-3" : "h-8"
       )}
     >
       <button
@@ -44,7 +44,7 @@ export function SearchSurface({
         type="button"
         onClick={onOpen}
         className={cn(
-          "flex items-center gap-2 text-left transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)]",
+          "flex w-full cursor-pointer items-center gap-2 text-left transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)]",
           isOpen
             ? "h-full flex-1 rounded-2xl border border-(--border-2) bg-(--surface-2) px-4"
             : "app-rounded h-full w-full border border-(--border-2) bg-transparent px-2.5 hover:border-(--border-strong) hover:bg-(--surface-2) hover:text-(--text-1)"
@@ -69,14 +69,11 @@ export function SearchSurface({
           )}
           readOnly={!isOpen}
         />
-        <span className="ml-auto inline-flex items-center gap-1 rounded-md border border-(--border-1) px-1.5 py-px font-['DM_Mono'] text-[11px] text-(--text-3)">
+        <span className="ml-auto inline-flex w-fit items-center gap-1 rounded-md border border-(--border-1) px-1.5 py-px font-['DM_Mono'] text-[11px] text-(--text-3)">
           {isOpen ? (
             "ESC"
           ) : (
-            <>
-              <CommandIcon size={12} strokeWidth={1.8} />
-              <span>K</span>
-            </>
+            <span className="app-text-small whitespace-nowrap">Ctrl + K</span>
           )}
         </span>
       </button>

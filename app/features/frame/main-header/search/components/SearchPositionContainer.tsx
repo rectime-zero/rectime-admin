@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 
 type SearchPositionContainerProps = {
   children: ReactNode;
-  isFloating: boolean;
   isOpen: boolean;
   left: number;
   top: number;
@@ -12,7 +11,6 @@ type SearchPositionContainerProps = {
 
 export function SearchPositionContainer({
   children,
-  isFloating,
   isOpen,
   left,
   top,
@@ -22,11 +20,7 @@ export function SearchPositionContainer({
   return (
     <div className="fixed inset-0 z-130 hidden md:block">
       <div
-        className={`absolute top-0 left-0 z-10 origin-top-left transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
-          isFloating
-            ? "overflow-hidden rounded-[22px] border border-(--border-2) bg-(--surface-overlay-strong) shadow-(--shadow-soft)"
-            : "overflow-visible bg-transparent shadow-none"
-        }`}
+        className="absolute top-0 left-0 z-10 origin-top-left transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)]"
         style={{
           left,
           top,

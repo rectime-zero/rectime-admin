@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { SearchBackdrop } from "~/features/frame/main-header/search/components/SearchBackdrop";
 import { SearchFlexContainer } from "~/features/frame/main-header/search/components/SearchFlexContainer";
 import { SearchPositionContainer } from "~/features/frame/main-header/search/components/SearchPositionContainer";
+import { SearchShell } from "~/features/frame/main-header/search/components/SearchShell";
 import { SearchSurface } from "~/features/frame/main-header/search/components/SearchSurface";
 import { useSearchTransition } from "~/features/frame/main-header/search/hooks/useSearchTransition";
 
@@ -48,21 +49,22 @@ export function SearchBtn() {
                 onClose={close}
               />
               <SearchPositionContainer
-                isFloating={isFloating}
                 isOpen={isOpen}
                 left={frame.left}
                 top={frame.top}
                 width={frame.width}
                 transform={frame.closedTransform}
               >
-                <SearchSurface
-                  inputRef={inputRef}
-                  isOpen={isOpen}
-                  query={query}
-                  onChange={setQuery}
-                  onClose={close}
-                  onOpen={open}
-                />
+                <SearchShell>
+                  <SearchSurface
+                    inputRef={inputRef}
+                    isOpen={isOpen}
+                    query={query}
+                    onChange={setQuery}
+                    onClose={close}
+                    onOpen={open}
+                  />
+                </SearchShell>
               </SearchPositionContainer>
             </>,
             document.body
