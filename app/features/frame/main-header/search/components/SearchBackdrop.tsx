@@ -16,7 +16,7 @@ export function SearchBackdrop({
   return (
     <div
       onClick={onClose}
-      className={`absolute inset-0 bg-black/30 backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
+      className={`fixed inset-0 z-120 bg-black/30 backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
         isActive
           ? "pointer-events-auto opacity-100"
           : "pointer-events-none opacity-0"
