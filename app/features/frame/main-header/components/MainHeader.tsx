@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 
-import { SearchBtn } from "~/features/frame/main-header/components/SearchBtn";
+import { SearchBtn } from "~/features/frame/main-header/search/components/SearchBtn";
 import { NoticeBtn } from "~/features/frame/main-header/components/NoticeBtn";
 import { AccountBtn } from "~/features/frame/main-header/account-menu/components/AccountBtn";
 import { EventSwitcherBtn } from "~/features/frame/main-header/event-switcher/components/EventSwitcherBtn";
