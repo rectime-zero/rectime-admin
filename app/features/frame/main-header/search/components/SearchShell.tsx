@@ -1,12 +1,16 @@
-import type { ReactNode } from "react";
+import type { ReactNode, Ref } from "react";
 
 type SearchShellProps = {
   children: ReactNode;
+  rootRef?: Ref<HTMLDivElement>;
 };
 
-export function SearchShell({ children }: SearchShellProps) {
+export function SearchShell({ children, rootRef }: SearchShellProps) {
   return (
-    <div className="app-rounded overflow-hidden border border-(--border-2) bg-(--surface-overlay-strong) shadow-(--shadow-soft)">
+    <div
+      ref={rootRef}
+      className="app-rounded overflow-hidden border border-(--border-2) bg-(--surface-overlay-strong) shadow-(--shadow-soft)"
+    >
       {children}
     </div>
   );

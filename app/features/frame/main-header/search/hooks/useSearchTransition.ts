@@ -1,55 +1,60 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 type SearchFrame = {
-  left: number;
-  top: number;
+  openLeft: number;
+  openTop: number;
+  closedWidth: number;
   width: number;
-  closedTransform: string;
+  closedTranslateX: number;
+  closedTranslateY: number;
 };
 
-const OPEN_HEIGHT = 56;
-const OPEN_MAX_WIDTH = 720;
-const OPEN_SIDE_GUTTER = 32;
-const TRANSITION_DURATION_MS = 500;
-
-type SearchPhase = "closed" | "opening" | "open" | "closing";
+const SEARCH_OPEN_MAX_WIDTH = 720;
+const SEARCH_VIEWPORT_GUTTER = 32;
+const SEARCH_OPEN_TOP_MIN = 24;
+const SEARCH_OPEN_TOP_RATIO = 0.14;
+const SEARCH_OPEN_FOCUS_DELAY_MS = 220;
 
 function createDefaultFrame(): SearchFrame {
   return {
-    left: 0,
-    top: 0,
-    width: OPEN_MAX_WIDTH,
-    closedTransform: "translate3d(0,0,0) scale(1,1)",
+    openLeft: 0,
+    openTop: 0,
+    closedWidth: 0,
+    width: 0,
+    closedTranslateX: 0,
+    closedTranslateY: 0,
   };
 }
 
 export function useSearchTransition() {
   const [frame, setFrame] = useState<SearchFrame>(createDefaultFrame);
-  const [phase, setPhase] = useState<SearchPhase>("closed");
+  const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const anchorRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const openFrameRef = useRef<number | null>(null);
-  const closeTimerRef = useRef<number | null>(null);
-  const phaseRef = useRef<SearchPhase>("closed");
+  const frameRef = useRef<number | null>(null);
 
-  const isClosed = phase === "closed";
-  const isOpen = phase === "open";
-  const isFloating = phase !== "closed";
-
-  function clearPendingFrames() {
-    if (openFrameRef.current !== null) {
-      window.cancelAnimationFrame(openFrameRef.current);
-      openFrameRef.current = null;
+  const clearPendingFrames = useCallback(() => {
+    if (frameRef.current !== null) {
+      window.cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
     }
+  }, []);
 
-    if (closeTimerRef.current !== null) {
-      window.clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
-    }
-  }
+  const getOpenWidth = useCallback((viewportWidth: number) => {
+    return Math.min(
+      viewportWidth - SEARCH_VIEWPORT_GUTTER,
+      SEARCH_OPEN_MAX_WIDTH
+    );
+  }, []);
 
-  function updateFrame() {
+  const updateFrame = useCallback(() => {
     const anchor = anchorRef.current;
 
     if (!anchor || typeof window === "undefined") {
@@ -57,75 +62,81 @@ export function useSearchTransition() {
     }
 
     const rect = anchor.getBoundingClientRect();
-    const openWidth = Math.min(
-      window.innerWidth - OPEN_SIDE_GUTTER,
-      OPEN_MAX_WIDTH
-    );
+    const openWidth = getOpenWidth(window.innerWidth);
     const openLeft = (window.innerWidth - openWidth) / 2;
-    const openTop = Math.max(24, window.innerHeight * 0.14);
-    const translateX = rect.left - openLeft;
-    const translateY = rect.top - openTop;
-    const scaleX = rect.width / openWidth;
-    const scaleY = rect.height / OPEN_HEIGHT;
+    const openTop = Math.max(
+      SEARCH_OPEN_TOP_MIN,
+      window.innerHeight * SEARCH_OPEN_TOP_RATIO
+    );
 
     setFrame({
-      left: openLeft,
-      top: openTop,
+      openLeft,
+      openTop,
+      closedWidth: rect.width,
       width: openWidth,
-      closedTransform: `translate3d(${translateX}px, ${translateY}px, 0) scale(${scaleX}, ${scaleY})`,
+      closedTranslateX: rect.left - openLeft,
+      closedTranslateY: rect.top - openTop,
     });
-  }
+  }, [getOpenWidth]);
 
-  function open() {
-    clearPendingFrames();
-    updateFrame();
-    setPhase("opening");
-    openFrameRef.current = window.requestAnimationFrame(() => {
-      setPhase("open");
-      openFrameRef.current = null;
-    });
-  }
-
-  function close() {
-    if (phaseRef.current === "closed") {
+  const scheduleFrameUpdate = useCallback(() => {
+    if (frameRef.current !== null) {
       return;
     }
 
-    clearPendingFrames();
-    setPhase("closing");
-    setQuery("");
-    closeTimerRef.current = window.setTimeout(() => {
-      setPhase("closed");
-      closeTimerRef.current = null;
-    }, TRANSITION_DURATION_MS);
-  }
+    frameRef.current = window.requestAnimationFrame(() => {
+      updateFrame();
+      frameRef.current = null;
+    });
+  }, [updateFrame]);
 
-  useEffect(() => {
-    phaseRef.current = phase;
-  }, [phase]);
+  const open = useCallback(() => {
+    clearPendingFrames();
+    updateFrame();
+    setIsOpen(true);
+    frameRef.current = window.requestAnimationFrame(() => {
+      updateFrame();
+      frameRef.current = null;
+    });
+  }, [clearPendingFrames, updateFrame]);
+
+  const close = useCallback(() => {
+    clearPendingFrames();
+    setIsOpen(false);
+    setQuery("");
+    frameRef.current = window.requestAnimationFrame(() => {
+      updateFrame();
+      frameRef.current = null;
+    });
+  }, [clearPendingFrames, updateFrame]);
 
   useLayoutEffect(() => {
     updateFrame();
-  }, []);
+  }, [updateFrame]);
 
   useEffect(() => {
-    function handleResize() {
-      updateFrame();
+    function handleViewportChange() {
+      scheduleFrameUpdate();
     }
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleViewportChange);
+    window.addEventListener("scroll", handleViewportChange, { passive: true });
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", handleViewportChange);
+      window.removeEventListener("scroll", handleViewportChange);
     };
-  }, []);
+  }, [scheduleFrameUpdate]);
 
   useEffect(() => {
     if (!isOpen) {
       return;
     }
 
-    const timeoutId = window.setTimeout(() => inputRef.current?.focus(), 220);
+    const timeoutId = window.setTimeout(
+      () => inputRef.current?.focus(),
+      SEARCH_OPEN_FOCUS_DELAY_MS
+    );
 
     return () => {
       window.clearTimeout(timeoutId);
@@ -133,7 +144,7 @@ export function useSearchTransition() {
   }, [isOpen]);
 
   useEffect(() => {
-    if (!isFloating || typeof document === "undefined") {
+    if (!isOpen || typeof document === "undefined") {
       return;
     }
 
@@ -156,33 +167,21 @@ export function useSearchTransition() {
       documentElement.style.overscrollBehavior =
         previousDocumentOverscrollBehavior;
     };
-  }, [isFloating]);
+  }, [isOpen]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
-        clearPendingFrames();
-        updateFrame();
-        setPhase("opening");
-        openFrameRef.current = window.requestAnimationFrame(() => {
-          setPhase("open");
-          openFrameRef.current = null;
-        });
+        open();
       }
 
       if (event.key === "Escape") {
-        if (phaseRef.current === "closed") {
+        if (!isOpen) {
           return;
         }
 
-        clearPendingFrames();
-        setPhase("closing");
-        setQuery("");
-        closeTimerRef.current = window.setTimeout(() => {
-          setPhase("closed");
-          closeTimerRef.current = null;
-        }, TRANSITION_DURATION_MS);
+        close();
       }
     }
 
@@ -191,21 +190,19 @@ export function useSearchTransition() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [close, isOpen, open]);
 
   useEffect(() => {
     return () => {
       clearPendingFrames();
     };
-  }, []);
+  }, [clearPendingFrames]);
 
   return {
     anchorRef,
     close,
     frame,
     inputRef,
-    isClosed,
-    isFloating,
     isOpen,
     query,
     setQuery,
