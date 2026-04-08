@@ -24,7 +24,7 @@ export function SearchPositionContainer({
     <div className="pointer-events-none fixed inset-0 z-130 hidden md:block">
       <div
         className={cn(
-          "app-rounded pointer-events-auto absolute z-10 bg-white shadow-(--shadow-soft) transition-[width,height,transform,padding] duration-1000 ease-[cubic-bezier(.22,1,.36,1)]",
+          "app-rounded pointer-events-auto absolute z-10 bg-white shadow-(--shadow-soft) transition-[width,height,transform,padding] duration-5000 ease-[cubic-bezier(.22,1,.36,1)]",
           isOpen ? "p-4" : "p-0"
         )}
         style={{
