@@ -112,7 +112,7 @@ export function SearchBarContent({
       <div
         onClick={handleClick}
         className={cn(
-          "app-rounded flex h-12 w-full min-w-0 shrink-0 items-center gap-2 border px-2.5 text-left",
+          "app-rounded flex h-full max-h-12 w-full min-w-0 shrink-0 items-center gap-2 border px-2.5 text-left",
           "border-(--border-2) bg-transparent",
           "transition-[border-color,background-color,color] duration-500 ease-[cubic-bezier(.22,1,.36,1)]",
           isOpen ? "cursor-text" : "cursor-pointer",
