@@ -62,6 +62,7 @@ export function SearchBtn() {
               <SearchPositionContainer
                 height={frame.height}
                 left={frame.left}
+                right={frame.right}
                 top={frame.top}
                 width={frame.width}
                 transform={frame.transform}
