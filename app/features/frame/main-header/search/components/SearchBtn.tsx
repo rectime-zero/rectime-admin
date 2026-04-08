@@ -7,6 +7,7 @@ import { SearchPositionContainer } from "~/features/frame/main-header/search/com
 import { SearchResultsPanel } from "~/features/frame/main-header/search/components/SearchResultsPanel";
 import { SearchShell } from "~/features/frame/main-header/search/components/SearchShell";
 import { useSearchTransition } from "~/features/frame/main-header/search/hooks/useSearchTransition";
+import { SearchFooter } from "~/features/frame/main-header/search/components/SearchFooter";
 
 export function SearchBtn() {
   const { anchorRef, close, frame, inputRef, isOpen, open, query, setQuery } =
@@ -23,14 +24,13 @@ export function SearchBtn() {
               {/* 黒背景 */}
               <SearchBackdrop isActive={isOpen} onClose={close} />
               <SearchPositionContainer
-                isOpen={isOpen}
                 height={frame.height}
                 left={frame.left}
                 top={frame.top}
                 width={frame.width}
                 transform={frame.transform}
               >
-                <SearchShell>
+                <SearchShell isOpen={isOpen}>
                   <SearchBarContent
                     inputRef={inputRef}
                     isOpen={isOpen}
@@ -39,6 +39,7 @@ export function SearchBtn() {
                     onOpen={open}
                   />
                   <SearchResultsPanel />
+                  <SearchFooter />
                 </SearchShell>
               </SearchPositionContainer>
             </>,

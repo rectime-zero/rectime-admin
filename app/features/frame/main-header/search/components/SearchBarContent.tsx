@@ -14,8 +14,6 @@ type SearchBarContentProps = {
 
 type SearchShortcutLabel = "Ctrl + K" | "ESC";
 
-const SEARCH_SHORTCUT_FADE_DURATION_MS = 160;
-const SEARCH_SHORTCUT_WIDTH_DURATION_MS = 220;
 const SEARCH_SHORTCUT_FALLBACK_WIDTH_PX = 56;
 
 export function SearchBarContent({
@@ -26,9 +24,6 @@ export function SearchBarContent({
   onOpen,
 }: SearchBarContentProps) {
   const nextShortcutLabel: SearchShortcutLabel = isOpen ? "ESC" : "Ctrl + K";
-  const [shortcutLabel, setShortcutLabel] =
-    useState<SearchShortcutLabel>(nextShortcutLabel);
-  const [isShortcutVisible, setIsShortcutVisible] = useState(true);
   const [shortcutWidths, setShortcutWidths] = useState<
     Record<SearchShortcutLabel, number>
   >({
@@ -68,30 +63,6 @@ export function SearchBarContent({
     };
   }, []);
 
-  useEffect(() => {
-    if (shortcutLabel === nextShortcutLabel) {
-      return;
-    }
-
-    const hideFrameId = window.requestAnimationFrame(() => {
-      setIsShortcutVisible(false);
-    });
-
-    const swapTimeoutId = window.setTimeout(() => {
-      setShortcutLabel(nextShortcutLabel);
-    }, SEARCH_SHORTCUT_FADE_DURATION_MS);
-
-    const showTimeoutId = window.setTimeout(() => {
-      setIsShortcutVisible(true);
-    }, SEARCH_SHORTCUT_FADE_DURATION_MS + SEARCH_SHORTCUT_WIDTH_DURATION_MS);
-
-    return () => {
-      window.cancelAnimationFrame(hideFrameId);
-      window.clearTimeout(swapTimeoutId);
-      window.clearTimeout(showTimeoutId);
-    };
-  }, [nextShortcutLabel, shortcutLabel]);
-
   function handleClick() {
     onOpen();
 
@@ -108,68 +79,61 @@ export function SearchBarContent({
   }
 
   return (
-    <>
-      <div
-        onClick={handleClick}
-        className={cn(
-          "app-rounded flex h-full max-h-12 w-full min-w-0 shrink-0 items-center gap-2 border px-2.5 text-left",
-          "border-(--border-2) bg-transparent",
-          "transition-[border-color,background-color,color] duration-500 ease-[cubic-bezier(.22,1,.36,1)]",
-          isOpen ? "cursor-text" : "cursor-pointer",
-          "hover:border-(--border-strong) hover:bg-(--surface-2) hover:text-(--text-1)"
-        )}
-      >
-        <SearchIcon
-          size={13}
-          strokeWidth={1.8}
-          className="shrink-0 text-(--text-2)"
+    <button
+      onClick={handleClick}
+      className={cn(
+        "app-rounded flex h-full max-h-12 w-full min-w-0 shrink-0 items-center gap-2 border px-2.5 text-left",
+        "border-(--border-2) bg-transparent",
+        "transition-[border-color,background-color,color] duration-500 ease-[cubic-bezier(.22,1,.36,1)]",
+        isOpen ? "cursor-text" : "cursor-pointer",
+        "hover:border-(--border-strong) hover:bg-(--surface-2) hover:text-(--text-1)"
+      )}
+    >
+      <SearchIcon
+        size={13}
+        strokeWidth={1.8}
+        className="shrink-0 text-(--text-2)"
+      />
+      <div className="relative flex min-w-0 flex-1 items-center gap-2">
+        <input
+          ref={inputRef}
+          value={query}
+          onChange={(event) => onChange(event.target.value)}
+          onFocus={onOpen}
+          placeholder="Search..."
+          className={cn(
+            "min-w-0 flex-1 bg-transparent text-[12.5px] text-(--text-3) outline-none placeholder:text-(--text-3)",
+            isOpen ? "cursor-text" : "cursor-pointer"
+          )}
         />
-        <div className="relative flex min-w-0 flex-1 items-center gap-2">
-          <input
-            ref={inputRef}
-            value={query}
-            onChange={(event) => onChange(event.target.value)}
-            onFocus={onOpen}
-            placeholder="Search..."
-            className={cn(
-              "min-w-0 flex-1 bg-transparent text-[12.5px] text-(--text-3) outline-none placeholder:text-(--text-3)",
-              isOpen ? "cursor-text" : "cursor-pointer"
-            )}
-          />
-          <span className="ml-auto inline-flex shrink-0 items-center rounded-md border border-(--border-1) px-1.5 py-px font-['DM_Mono'] text-[11px] text-(--text-3)">
-            <span
-              className="app-text-small relative inline-flex h-[1.2em] items-center justify-center overflow-hidden whitespace-nowrap transition-[width] duration-200 ease-[cubic-bezier(.22,1,.36,1)]"
-              style={{ width: `${shortcutWidths[shortcutLabel]}px` }}
-            >
-              <span
-                className={cn(
-                  "absolute inset-0 inline-flex items-center justify-center whitespace-nowrap transition-opacity duration-150 ease-[cubic-bezier(.22,1,.36,1)]",
-                  isShortcutVisible ? "opacity-100" : "opacity-0"
-                )}
-              >
-                {shortcutLabel}
-              </span>
+        <span className="ml-auto inline-flex shrink-0 items-center rounded-md border border-(--border-1) px-1.5 py-px font-['DM_Mono'] text-[11px] text-(--text-3)">
+          <span
+            className="app-text-small relative inline-flex h-[1.2em] items-center justify-center overflow-hidden whitespace-nowrap transition-[width] duration-200 ease-[cubic-bezier(.22,1,.36,1)]"
+            style={{ width: `${shortcutWidths[nextShortcutLabel]}px` }}
+          >
+            <span className="absolute inset-0 inline-flex items-center justify-center whitespace-nowrap transition-opacity duration-150 ease-[cubic-bezier(.22,1,.36,1)]">
+              {nextShortcutLabel}
             </span>
+          </span>
+        </span>
+        <span
+          className="pointer-events-none absolute -z-10 opacity-0"
+          aria-hidden="true"
+        >
+          <span
+            ref={ctrlShortcutRef}
+            className="app-text-small px-2 font-['DM_Mono'] whitespace-nowrap"
+          >
+            Ctrl + K
           </span>
           <span
-            className="pointer-events-none absolute -z-10 opacity-0"
-            aria-hidden="true"
+            ref={escShortcutRef}
+            className="app-text-small whitespace-nowrap"
           >
-            <span
-              ref={ctrlShortcutRef}
-              className="app-text-small whitespace-nowrap"
-            >
-              Ctrl + K
-            </span>
-            <span
-              ref={escShortcutRef}
-              className="app-text-small whitespace-nowrap"
-            >
-              ESC
-            </span>
+            ESC
           </span>
-        </div>
+        </span>
       </div>
-    </>
+    </button>
   );
 }

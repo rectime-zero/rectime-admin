@@ -1,5 +1,3 @@
-import { SearchFooter } from "~/features/frame/main-header/search/components/SearchFooter";
-
 export function SearchResultsPanel() {
   return (
     <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[10px] border border-(--border-1) bg-(--surface-1)">
@@ -11,7 +9,6 @@ export function SearchResultsPanel() {
           Search results, recent items, or suggestions can be rendered here.
         </div>
       </div>
-      <SearchFooter />
     </section>
   );
 }
