@@ -27,6 +27,7 @@ export function SearchBtn() {
               />
               <SearchPositionContainer
                 isOpen={isOpen}
+                height={frame.height}
                 openLeft={frame.openLeft}
                 openTop={frame.openTop}
                 closedWidth={frame.closedWidth}
@@ -37,6 +38,7 @@ export function SearchBtn() {
                 <SearchShell>
                   <SearchBarContent
                     inputRef={inputRef}
+                    isOpen={isOpen}
                     query={query}
                     onChange={setQuery}
                     onOpen={open}

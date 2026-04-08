@@ -5,5 +5,7 @@ type SearchAnchorProps = {
 };
 
 export function SearchAnchor({ anchorRef }: SearchAnchorProps) {
-  return <div ref={anchorRef} className="hidden h-8 w-50 shrink-0 md:block" />;
+  return (
+    <div ref={anchorRef} className="hidden h-full w-50 shrink-0 md:block" />
+  );
 }

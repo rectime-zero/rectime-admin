@@ -9,7 +9,7 @@ export function SearchShell({ children, rootRef }: SearchShellProps) {
   return (
     <div
       ref={rootRef}
-      className="app-rounded overflow-hidden border border-(--border-2) bg-(--surface-overlay-strong) shadow-(--shadow-soft)"
+      className="app-rounded h-full overflow-hidden shadow-(--shadow-soft)"
     >
       {children}
     </div>

@@ -7,6 +7,7 @@ import {
 } from "react";
 
 type SearchFrame = {
+  height: number;
   openLeft: number;
   openTop: number;
   closedWidth: number;
@@ -23,6 +24,7 @@ const SEARCH_OPEN_FOCUS_DELAY_MS = 220;
 
 function createDefaultFrame(): SearchFrame {
   return {
+    height: 0,
     openLeft: 0,
     openTop: 0,
     closedWidth: 0,
@@ -70,6 +72,7 @@ export function useSearchTransition() {
     );
 
     setFrame({
+      height: rect.height,
       openLeft,
       openTop,
       closedWidth: rect.width,
