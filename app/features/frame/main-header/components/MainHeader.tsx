@@ -14,7 +14,7 @@ export function MainHeader() {
   }
 
   return (
-    <header className="header-height sticky top-0 z-30 flex items-center justify-between border-b border-(--border-1) bg-(--surface-overlay)/95 px-3 py-2.5 backdrop-blur-xl">
+    <header className="main-header-height sticky top-0 z-30 flex items-center justify-between border-b border-(--border-1) bg-(--surface-overlay)/95 px-3 py-2.5 backdrop-blur-xl">
       <div className="flex h-full">
         <MobileHamburgerMenuBtn />
         <EventSwitcherBtn />

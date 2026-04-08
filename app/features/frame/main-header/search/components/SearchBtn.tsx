@@ -4,6 +4,7 @@ import { useCallback, useRef } from "react";
 import { SearchAnchor } from "~/features/frame/main-header/search/components/SearchAnchor";
 import { SearchBackdrop } from "~/features/frame/main-header/search/components/SearchBackdrop";
 import { SearchBarContent } from "~/features/frame/main-header/search/components/SearchBarContent";
+import { SearchExpandedBody } from "~/features/frame/main-header/search/components/SearchExpandedBody";
 import { SearchPositionContainer } from "~/features/frame/main-header/search/components/SearchPositionContainer";
 import { SearchResultsPanel } from "~/features/frame/main-header/search/components/SearchResultsPanel";
 import { SearchShell } from "~/features/frame/main-header/search/components/SearchShell";
@@ -61,7 +62,6 @@ export function SearchBtn() {
               <SearchBackdrop isActive={isOpen} onClose={handleClose} />
               <SearchPositionContainer
                 height={frame.height}
-                left={frame.left}
                 right={frame.right}
                 top={frame.top}
                 width={frame.width}
@@ -75,13 +75,15 @@ export function SearchBtn() {
                     onChange={setQuery}
                     onOpen={handleOpen}
                   />
-                  <SearchResultsPanel
-                    results={MOCK_SEARCH_RESULTS}
-                    selectedIndex={selectedIndex}
-                    onSelectIndex={setSelectedIndex}
-                    onConfirmIndex={handleConfirmIndex}
-                  />
-                  <SearchFooter />
+                  <SearchExpandedBody isOpen={isOpen}>
+                    <SearchResultsPanel
+                      results={MOCK_SEARCH_RESULTS}
+                      selectedIndex={selectedIndex}
+                      onSelectIndex={setSelectedIndex}
+                      onConfirmIndex={handleConfirmIndex}
+                    />
+                    <SearchFooter />
+                  </SearchExpandedBody>
                 </SearchShell>
               </SearchPositionContainer>
             </>,

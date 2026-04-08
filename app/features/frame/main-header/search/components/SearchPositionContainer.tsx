@@ -4,8 +4,7 @@ import { cn } from "~/lib/cn";
 type SearchPositionContainerProps = {
   children: ReactNode;
   height: number;
-  left: number | "auto";
-  right: number | "auto";
+  right: number;
   top: number | string;
   width: number;
   transform: string;
@@ -14,7 +13,6 @@ type SearchPositionContainerProps = {
 export function SearchPositionContainer({
   children,
   height,
-  left,
   right,
   top,
   width,
@@ -24,10 +22,9 @@ export function SearchPositionContainer({
     <div className="pointer-events-none fixed inset-0 z-130 hidden md:block">
       <div
         className={cn(
-          "pointer-events-auto absolute z-10 transition-[top,left,right,width,height,transform] duration-400 ease-in-out"
+          "pointer-events-auto absolute z-10 transition-[top,right,width,height,transform] duration-400 ease-in-out"
         )}
         style={{
-          left,
           right,
           top,
           height,

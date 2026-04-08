@@ -2,8 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type SearchFrame = {
   height: number;
-  left: number | "auto";
-  right: number | "auto";
+  right: number;
   top: number | string;
   width: number;
   transform: string;
@@ -17,8 +16,7 @@ function createDefaultFrame(): SearchFrame {
   return {
     height: 0,
     width: 0,
-    left: 0,
-    right: "auto",
+    right: 0,
     top: 0,
     transform: "translate3d(0,0,0)",
   };
@@ -58,13 +56,12 @@ export function useSearchFrame({ isOpen }: UseSearchFrameParams) {
       const rect = anchor.getBoundingClientRect();
       const openWidth = getOpenWidth(window.innerWidth);
       const openHeight = window.innerHeight * SEARCH_OPEN_HEIGHT_RATIO;
-      const openLeft = (window.innerWidth - openWidth) / 2;
+      const openRight = (window.innerWidth - openWidth) / 2;
       const closedRight = window.innerWidth - rect.right;
 
       setFrame({
         height: nextIsOpen ? openHeight : rect.height,
-        left: nextIsOpen ? openLeft : "auto",
-        right: nextIsOpen ? "auto" : closedRight,
+        right: nextIsOpen ? openRight : closedRight,
         top: nextIsOpen ? "50%" : rect.top,
         width: nextIsOpen ? openWidth : rect.width,
         transform: nextIsOpen ? "translate3d(0,-50%,0)" : "translate3d(0,0,0)",
@@ -85,14 +82,13 @@ export function useSearchFrame({ isOpen }: UseSearchFrameParams) {
         const rect = node.getBoundingClientRect();
         const openWidth = getOpenWidth(window.innerWidth);
         const openHeight = window.innerHeight * SEARCH_OPEN_HEIGHT_RATIO;
-        const openLeft = (window.innerWidth - openWidth) / 2;
+        const openRight = (window.innerWidth - openWidth) / 2;
         const closedRight = window.innerWidth - rect.right;
         const nextIsOpen = currentFrame.top === "50%";
 
         return {
           height: nextIsOpen ? openHeight : rect.height,
-          left: nextIsOpen ? openLeft : "auto",
-          right: nextIsOpen ? "auto" : closedRight,
+          right: nextIsOpen ? openRight : closedRight,
           top: nextIsOpen ? "50%" : rect.top,
           width: nextIsOpen ? openWidth : rect.width,
           transform: nextIsOpen
@@ -128,20 +124,30 @@ export function useSearchFrame({ isOpen }: UseSearchFrameParams) {
   );
 
   useEffect(() => {
+    function handleResize() {
+      scheduleFrameUpdate();
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [scheduleFrameUpdate]);
+
+  useEffect(() => {
     if (isOpen) {
       return;
     }
 
-    function handleViewportChange() {
+    function handleScroll() {
       scheduleFrameUpdate();
     }
 
-    window.addEventListener("resize", handleViewportChange);
-    window.addEventListener("scroll", handleViewportChange, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener("resize", handleViewportChange);
-      window.removeEventListener("scroll", handleViewportChange);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [isOpen, scheduleFrameUpdate]);
 
