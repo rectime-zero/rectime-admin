@@ -7,7 +7,10 @@ type SearchShellProps = {
 
 export function SearchShell({ children, rootRef }: SearchShellProps) {
   return (
-    <div ref={rootRef} className="app-rounded h-full overflow-hidden">
+    <div
+      ref={rootRef}
+      className="app-rounded flex h-full flex-col gap-4 overflow-hidden"
+    >
       {children}
     </div>
   );

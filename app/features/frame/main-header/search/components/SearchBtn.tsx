@@ -4,6 +4,7 @@ import { SearchAnchor } from "~/features/frame/main-header/search/components/Sea
 import { SearchBackdrop } from "~/features/frame/main-header/search/components/SearchBackdrop";
 import { SearchBarContent } from "~/features/frame/main-header/search/components/SearchBarContent";
 import { SearchPositionContainer } from "~/features/frame/main-header/search/components/SearchPositionContainer";
+import { SearchResultsPanel } from "~/features/frame/main-header/search/components/SearchResultsPanel";
 import { SearchShell } from "~/features/frame/main-header/search/components/SearchShell";
 import { useSearchTransition } from "~/features/frame/main-header/search/hooks/useSearchTransition";
 
@@ -37,6 +38,7 @@ export function SearchBtn() {
                     onChange={setQuery}
                     onOpen={open}
                   />
+                  <SearchResultsPanel />
                 </SearchShell>
               </SearchPositionContainer>
             </>,

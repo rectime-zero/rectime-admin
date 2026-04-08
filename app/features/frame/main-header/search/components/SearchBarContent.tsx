@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
-import { cn } from "~/lib/cn";
 import { SearchIcon } from "lucide-react";
+
+import { cn } from "~/lib/cn";
 
 type SearchBarContentProps = {
   inputRef: React.RefObject<HTMLInputElement | null>;
@@ -25,16 +26,18 @@ export function SearchBarContent({
   onOpen,
 }: SearchBarContentProps) {
   const nextShortcutLabel: SearchShortcutLabel = isOpen ? "ESC" : "Ctrl + K";
-  const [shortcutLabel, setShortcutLabel] = useState(nextShortcutLabel);
+  const [shortcutLabel, setShortcutLabel] =
+    useState<SearchShortcutLabel>(nextShortcutLabel);
   const [isShortcutVisible, setIsShortcutVisible] = useState(true);
-  const ctrlShortcutRef = useRef<HTMLSpanElement>(null);
-  const escShortcutRef = useRef<HTMLSpanElement>(null);
   const [shortcutWidths, setShortcutWidths] = useState<
     Record<SearchShortcutLabel, number>
   >({
     "Ctrl + K": SEARCH_SHORTCUT_FALLBACK_WIDTH_PX,
     ESC: SEARCH_SHORTCUT_FALLBACK_WIDTH_PX,
   });
+
+  const ctrlShortcutRef = useRef<HTMLSpanElement>(null);
+  const escShortcutRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const frameId = window.requestAnimationFrame(() => {
@@ -45,9 +48,18 @@ export function SearchBarContent({
         return;
       }
 
-      setShortcutWidths({
-        "Ctrl + K": ctrlWidth,
-        ESC: escWidth,
+      setShortcutWidths((currentWidths) => {
+        if (
+          currentWidths["Ctrl + K"] === ctrlWidth &&
+          currentWidths.ESC === escWidth
+        ) {
+          return currentWidths;
+        }
+
+        return {
+          "Ctrl + K": ctrlWidth,
+          ESC: escWidth,
+        };
       });
     });
 
@@ -58,13 +70,7 @@ export function SearchBarContent({
 
   useEffect(() => {
     if (shortcutLabel === nextShortcutLabel) {
-      const frameId = window.requestAnimationFrame(() => {
-        setIsShortcutVisible(true);
-      });
-
-      return () => {
-        window.cancelAnimationFrame(frameId);
-      };
+      return;
     }
 
     const hideFrameId = window.requestAnimationFrame(() => {
@@ -86,8 +92,6 @@ export function SearchBarContent({
     };
   }, [nextShortcutLabel, shortcutLabel]);
 
-  const shortcutWidth = shortcutWidths[shortcutLabel];
-
   function handleClick() {
     onOpen();
 
@@ -108,7 +112,7 @@ export function SearchBarContent({
       <div
         onClick={handleClick}
         className={cn(
-          "app-rounded flex h-full max-h-12 w-full min-w-0 items-center gap-2 border px-2.5 text-left",
+          "app-rounded flex h-12 w-full min-w-0 shrink-0 items-center gap-2 border px-2.5 text-left",
           "border-(--border-2) bg-transparent",
           "transition-[border-color,background-color,color] duration-500 ease-[cubic-bezier(.22,1,.36,1)]",
           isOpen ? "cursor-text" : "cursor-pointer",
@@ -120,7 +124,7 @@ export function SearchBarContent({
           strokeWidth={1.8}
           className="shrink-0 text-(--text-2)"
         />
-        <div className="flex min-w-0 flex-1 items-center gap-2">
+        <div className="relative flex min-w-0 flex-1 items-center gap-2">
           <input
             ref={inputRef}
             value={query}
@@ -132,14 +136,14 @@ export function SearchBarContent({
               isOpen ? "cursor-text" : "cursor-pointer"
             )}
           />
-          <span className="ml-auto inline-flex shrink-0 items-center rounded-md border border-(--border-1) py-px font-['DM_Mono'] text-[11px] text-(--text-3)">
+          <span className="ml-auto inline-flex shrink-0 items-center rounded-md border border-(--border-1) px-1.5 py-px font-['DM_Mono'] text-[11px] text-(--text-3)">
             <span
-              className="app-text-small relative mb-1 inline-flex h-[1.2em] items-center justify-center overflow-hidden whitespace-nowrap opacity-100! transition-[width] duration-200 ease-[cubic-bezier(.22,1,.36,1)]"
-              style={{ width: `${shortcutWidth}px` }}
+              className="app-text-small relative inline-flex h-[1.2em] items-center justify-center overflow-hidden whitespace-nowrap transition-[width] duration-200 ease-[cubic-bezier(.22,1,.36,1)]"
+              style={{ width: `${shortcutWidths[shortcutLabel]}px` }}
             >
               <span
                 className={cn(
-                  "absolute inset-0 px-2 text-center transition-opacity duration-150 ease-[cubic-bezier(.22,1,.36,1)]",
+                  "absolute inset-0 inline-flex items-center justify-center whitespace-nowrap transition-opacity duration-150 ease-[cubic-bezier(.22,1,.36,1)]",
                   isShortcutVisible ? "opacity-100" : "opacity-0"
                 )}
               >
@@ -148,18 +152,18 @@ export function SearchBarContent({
             </span>
           </span>
           <span
-            className="pointer-events-none absolute opacity-0"
+            className="pointer-events-none absolute -z-10 opacity-0"
             aria-hidden="true"
           >
             <span
               ref={ctrlShortcutRef}
-              className="app-text-small px-2 font-['DM_Mono']"
+              className="app-text-small whitespace-nowrap"
             >
               Ctrl + K
             </span>
             <span
               ref={escShortcutRef}
-              className="app-text-small px-2 font-['DM_Mono']"
+              className="app-text-small whitespace-nowrap"
             >
               ESC
             </span>
