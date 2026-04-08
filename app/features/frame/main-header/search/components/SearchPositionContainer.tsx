@@ -22,7 +22,7 @@ export function SearchPositionContainer({
     <div className="pointer-events-none fixed inset-0 z-130 hidden md:block">
       <div
         className={cn(
-          "pointer-events-auto absolute z-10 transition-[width,height,transform] duration-5000 ease-[cubic-bezier(.22,1,.36,1)]"
+          "pointer-events-auto absolute z-10 transition-[width,height,transform] duration-400 ease-in-out"
         )}
         style={{
           left,

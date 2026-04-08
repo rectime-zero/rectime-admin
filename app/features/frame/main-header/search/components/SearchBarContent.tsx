@@ -83,9 +83,11 @@ export function SearchBarContent({
       onClick={handleClick}
       className={cn(
         "app-rounded flex h-full max-h-12 w-full min-w-0 shrink-0 items-center gap-2 border px-2.5 text-left",
-        "border-(--border-2) bg-transparent",
-        "transition-[border-color,background-color,color] duration-500 ease-[cubic-bezier(.22,1,.36,1)]",
-        isOpen ? "cursor-text" : "cursor-pointer",
+        "border-(--border-2)",
+        "transition-[border-color,background-color,color] ease-in-out",
+        isOpen
+          ? "cursor-text bg-(--surface-1) duration-500"
+          : "cursor-pointer bg-transparent duration-1200",
         "hover:border-(--border-strong) hover:bg-(--surface-2) hover:text-(--text-1)"
       )}
     >
@@ -102,7 +104,7 @@ export function SearchBarContent({
           onFocus={onOpen}
           placeholder="Search..."
           className={cn(
-            "min-w-0 flex-1 bg-transparent text-[12.5px] text-(--text-3) outline-none placeholder:text-(--text-3)",
+            "app-text-small min-w-0 flex-1 bg-transparent text-(--text-3) outline-none placeholder:text-(--text-3)",
             isOpen ? "cursor-text" : "cursor-pointer"
           )}
         />
@@ -122,7 +124,7 @@ export function SearchBarContent({
         >
           <span
             ref={ctrlShortcutRef}
-            className="app-text-small px-2 font-['DM_Mono'] whitespace-nowrap"
+            className="app-text-small whitespace-nowrap"
           >
             Ctrl + K
           </span>
