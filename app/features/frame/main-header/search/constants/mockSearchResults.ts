@@ -1,10 +1,10 @@
-export type MockSearchResult = {
+export type SearchResultItem = {
   id: string;
   title: string;
   category: string;
 };
 
-export const MOCK_SEARCH_RESULTS: MockSearchResult[] = [
+export const MOCK_SEARCH_RESULTS: SearchResultItem[] = [
   { id: "1", title: "How to reset workspace layout", category: "Help Center" },
   { id: "2", title: "Weekly product sync notes", category: "Documents" },
   { id: "3", title: "Release checklist v2", category: "Playbooks" },

@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-
 import { SearchIcon } from "lucide-react";
 
+import { useSearchBarActivation } from "~/features/frame/main-header/search/hooks/useSearchBarActivation";
+import { useSearchShortcutWidths } from "~/features/frame/main-header/search/hooks/useSearchShortcutWidths";
 import { cn } from "~/lib/cn";
 
 type SearchBarContentProps = {
@@ -12,10 +12,6 @@ type SearchBarContentProps = {
   onOpen: () => void;
 };
 
-type SearchShortcutLabel = "Ctrl + K" | "ESC";
-
-const SEARCH_SHORTCUT_FALLBACK_WIDTH_PX = 56;
-
 export function SearchBarContent({
   inputRef,
   isOpen,
@@ -23,64 +19,17 @@ export function SearchBarContent({
   onChange,
   onOpen,
 }: SearchBarContentProps) {
-  const nextShortcutLabel: SearchShortcutLabel = isOpen ? "ESC" : "Ctrl + K";
-  const [shortcutWidths, setShortcutWidths] = useState<
-    Record<SearchShortcutLabel, number>
-  >({
-    "Ctrl + K": SEARCH_SHORTCUT_FALLBACK_WIDTH_PX,
-    ESC: SEARCH_SHORTCUT_FALLBACK_WIDTH_PX,
-  });
-
-  const ctrlShortcutRef = useRef<HTMLSpanElement>(null);
-  const escShortcutRef = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const frameId = window.requestAnimationFrame(() => {
-      const ctrlWidth = ctrlShortcutRef.current?.getBoundingClientRect().width;
-      const escWidth = escShortcutRef.current?.getBoundingClientRect().width;
-
-      if (!ctrlWidth || !escWidth) {
-        return;
-      }
-
-      setShortcutWidths((currentWidths) => {
-        if (
-          currentWidths["Ctrl + K"] === ctrlWidth &&
-          currentWidths.ESC === escWidth
-        ) {
-          return currentWidths;
-        }
-
-        return {
-          "Ctrl + K": ctrlWidth,
-          ESC: escWidth,
-        };
-      });
-    });
-
-    return () => {
-      window.cancelAnimationFrame(frameId);
-    };
-  }, []);
-
-  function handleClick() {
-    onOpen();
-
-    requestAnimationFrame(() => {
-      const input = inputRef.current;
-
-      if (!input) {
-        return;
-      }
-
-      input.focus();
-      input.setSelectionRange(input.value.length, input.value.length);
-    });
-  }
+  const {
+    ctrlShortcutRef,
+    currentShortcutLabel,
+    currentShortcutWidth,
+    escShortcutRef,
+  } = useSearchShortcutWidths({ isOpen });
+  const { handleActivate } = useSearchBarActivation({ inputRef, onOpen });
 
   return (
     <button
-      onClick={handleClick}
+      onClick={handleActivate}
       className={cn(
         "app-rounded flex h-full max-h-12 w-full min-w-0 shrink-0 items-center gap-2 border px-2.5 text-left",
         "border-(--border-2)",
@@ -111,10 +60,10 @@ export function SearchBarContent({
         <span className="ml-auto inline-flex shrink-0 items-center rounded-md border border-(--border-1) px-1.5 py-px font-['DM_Mono'] text-[11px] text-(--text-3)">
           <span
             className="app-text-small relative inline-flex h-[1.2em] items-center justify-center overflow-hidden whitespace-nowrap transition-[width] duration-200 ease-[cubic-bezier(.22,1,.36,1)]"
-            style={{ width: `${shortcutWidths[nextShortcutLabel]}px` }}
+            style={{ width: `${currentShortcutWidth}px` }}
           >
             <span className="absolute inset-0 inline-flex items-center justify-center whitespace-nowrap transition-opacity duration-150 ease-[cubic-bezier(.22,1,.36,1)]">
-              {nextShortcutLabel}
+              {currentShortcutLabel}
             </span>
           </span>
         </span>

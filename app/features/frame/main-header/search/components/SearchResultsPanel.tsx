@@ -1,24 +1,21 @@
-import { useEffect, useRef } from "react";
-
-import { MOCK_SEARCH_RESULTS } from "~/features/frame/main-header/search/constants/mockSearchResults";
+import type { SearchResultItem } from "~/features/frame/main-header/search/constants/mockSearchResults";
+import { useSearchResultScroll } from "~/features/frame/main-header/search/hooks/useSearchResultScroll";
 import { cn } from "~/lib/cn";
 
 type SearchResultsPanelProps = {
+  results: SearchResultItem[];
   selectedIndex: number;
   onSelectIndex: (index: number) => void;
   onConfirmIndex: (index: number) => void;
 };
 
 export function SearchResultsPanel({
+  results,
   selectedIndex,
   onSelectIndex,
   onConfirmIndex,
 }: SearchResultsPanelProps) {
-  const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  useEffect(() => {
-    itemRefs.current[selectedIndex]?.scrollIntoView({ block: "nearest" });
-  }, [selectedIndex]);
+  const { itemRefs } = useSearchResultScroll({ selectedIndex });
 
   return (
     <section className="app-rounded flex min-h-0 flex-1 flex-col overflow-hidden border border-(--border-1) bg-(--surface-1)">
@@ -27,7 +24,7 @@ export function SearchResultsPanel({
           Search Area
         </div>
         <ul className="app-rounded min-h-0 flex-1 space-y-2 overflow-y-auto border border-(--border-1) p-2">
-          {MOCK_SEARCH_RESULTS.map((result, index) => (
+          {results.map((result, index) => (
             <li key={result.id}>
               <button
                 ref={(node) => {

@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useRef } from "react";
 
 import { SearchAnchor } from "~/features/frame/main-header/search/components/SearchAnchor";
 import { SearchBackdrop } from "~/features/frame/main-header/search/components/SearchBackdrop";
@@ -10,21 +10,12 @@ import { SearchShell } from "~/features/frame/main-header/search/components/Sear
 import { useSearchTransition } from "~/features/frame/main-header/search/hooks/useSearchTransition";
 import { SearchFooter } from "~/features/frame/main-header/search/components/SearchFooter";
 import { MOCK_SEARCH_RESULTS } from "~/features/frame/main-header/search/constants/mockSearchResults";
+import { useSearchResultNavigation } from "~/features/frame/main-header/search/hooks/useSearchResultNavigation";
 
 export function SearchBtn() {
   const { anchorRef, close, frame, inputRef, isOpen, open, query, setQuery } =
     useSearchTransition();
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const handleOpen = useCallback(() => {
-    setSelectedIndex(0);
-    open();
-  }, [open]);
-
-  const handleClose = useCallback(() => {
-    setSelectedIndex(0);
-    close();
-  }, [close]);
+  const shellRef = useRef<HTMLDivElement>(null);
 
   const handleConfirmIndex = useCallback(
     (index: number) => {
@@ -35,49 +26,28 @@ export function SearchBtn() {
       }
 
       console.info(`[Search] selected: ${selectedResult.title}`);
-      handleClose();
+      close();
     },
-    [handleClose]
+    [close]
   );
 
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
+  const { resetSelection, selectedIndex, setSelectedIndex } =
+    useSearchResultNavigation({
+      isOpen,
+      resultCount: MOCK_SEARCH_RESULTS.length,
+      onConfirmIndex: handleConfirmIndex,
+      scopeRef: shellRef,
+    });
 
-    function handleKeyDown(event: KeyboardEvent) {
-      if (MOCK_SEARCH_RESULTS.length === 0 || event.isComposing) {
-        return;
-      }
+  const handleOpen = useCallback(() => {
+    resetSelection();
+    open();
+  }, [open, resetSelection]);
 
-      if (event.key === "ArrowDown") {
-        event.preventDefault();
-        setSelectedIndex(
-          (current) => (current + 1) % MOCK_SEARCH_RESULTS.length
-        );
-      }
-
-      if (event.key === "ArrowUp") {
-        event.preventDefault();
-        setSelectedIndex(
-          (current) =>
-            (current - 1 + MOCK_SEARCH_RESULTS.length) %
-            MOCK_SEARCH_RESULTS.length
-        );
-      }
-
-      if (event.key === "Enter") {
-        event.preventDefault();
-        handleConfirmIndex(selectedIndex);
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [handleConfirmIndex, isOpen, selectedIndex]);
+  const handleClose = useCallback(() => {
+    resetSelection();
+    close();
+  }, [close, resetSelection]);
 
   return (
     <>
@@ -96,7 +66,7 @@ export function SearchBtn() {
                 width={frame.width}
                 transform={frame.transform}
               >
-                <SearchShell isOpen={isOpen}>
+                <SearchShell rootRef={shellRef} isOpen={isOpen}>
                   <SearchBarContent
                     inputRef={inputRef}
                     isOpen={isOpen}
@@ -105,6 +75,7 @@ export function SearchBtn() {
                     onOpen={handleOpen}
                   />
                   <SearchResultsPanel
+                    results={MOCK_SEARCH_RESULTS}
                     selectedIndex={selectedIndex}
                     onSelectIndex={setSelectedIndex}
                     onConfirmIndex={handleConfirmIndex}
