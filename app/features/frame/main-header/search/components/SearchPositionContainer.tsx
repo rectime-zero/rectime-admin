@@ -5,40 +5,34 @@ type SearchPositionContainerProps = {
   children: ReactNode;
   isOpen: boolean;
   height: number;
-  openLeft: number;
-  openTop: number;
-  closedWidth: number;
+  left: number;
+  top: number | string;
   width: number;
-  closedTranslateX: number;
-  closedTranslateY: number;
+  transform: string;
 };
 
 export function SearchPositionContainer({
   children,
   isOpen,
   height,
-  openLeft,
-  openTop,
-  closedWidth,
+  left,
+  top,
   width,
-  closedTranslateX,
-  closedTranslateY,
+  transform,
 }: SearchPositionContainerProps) {
   return (
     <div className="pointer-events-none fixed inset-0 z-130 hidden md:block">
       <div
         className={cn(
-          "app-rounded pointer-events-auto absolute z-10 bg-white transition-[width,transform] duration-500 ease-[cubic-bezier(.22,1,.36,1)]",
-          isOpen ? "p-1" : "p-0"
+          "app-rounded pointer-events-auto absolute z-10 bg-white shadow-(--shadow-soft) transition-[width,height,transform,padding] duration-1000 ease-[cubic-bezier(.22,1,.36,1)]",
+          isOpen ? "p-4" : "p-0"
         )}
         style={{
-          left: openLeft,
-          top: openTop,
+          left,
+          top,
           height,
-          width: isOpen ? width : closedWidth,
-          transform: isOpen
-            ? "translate3d(0,0,0)"
-            : `translate3d(${closedTranslateX}px, ${closedTranslateY}px, 0)`,
+          width,
+          transform,
         }}
       >
         {children}

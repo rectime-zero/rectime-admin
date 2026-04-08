@@ -1,36 +1,25 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type SearchFrame = {
   height: number;
-  openLeft: number;
-  openTop: number;
-  closedWidth: number;
+  left: number;
+  top: number | string;
   width: number;
-  closedTranslateX: number;
-  closedTranslateY: number;
+  transform: string;
 };
 
 const SEARCH_OPEN_MAX_WIDTH = 720;
 const SEARCH_VIEWPORT_GUTTER = 32;
-const SEARCH_OPEN_TOP_MIN = 24;
-const SEARCH_OPEN_TOP_RATIO = 0.14;
 const SEARCH_OPEN_FOCUS_DELAY_MS = 220;
+const SEARCH_OPEN_HEIGHT_RATIO = 0.8;
 
 function createDefaultFrame(): SearchFrame {
   return {
     height: 0,
-    openLeft: 0,
-    openTop: 0,
-    closedWidth: 0,
     width: 0,
-    closedTranslateX: 0,
-    closedTranslateY: 0,
+    left: 0,
+    top: 0,
+    transform: "translate3d(0,0,0)",
   };
 }
 
@@ -38,7 +27,7 @@ export function useSearchTransition() {
   const [frame, setFrame] = useState<SearchFrame>(createDefaultFrame);
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const anchorRef = useRef<HTMLDivElement>(null);
+  const anchorElementRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const frameRef = useRef<number | null>(null);
 
@@ -56,31 +45,67 @@ export function useSearchTransition() {
     );
   }, []);
 
-  const updateFrame = useCallback(() => {
-    const anchor = anchorRef.current;
+  const updateFrame = useCallback(
+    (nextIsOpen: boolean) => {
+      const anchor = anchorElementRef.current;
 
-    if (!anchor || typeof window === "undefined") {
-      return;
-    }
+      if (!anchor || typeof window === "undefined") {
+        return;
+      }
 
-    const rect = anchor.getBoundingClientRect();
-    const openWidth = getOpenWidth(window.innerWidth);
-    const openLeft = (window.innerWidth - openWidth) / 2;
-    const openTop = Math.max(
-      SEARCH_OPEN_TOP_MIN,
-      window.innerHeight * SEARCH_OPEN_TOP_RATIO
-    );
+      const rect = anchor.getBoundingClientRect();
+      const openWidth = getOpenWidth(window.innerWidth);
+      const openHeight = window.innerHeight * SEARCH_OPEN_HEIGHT_RATIO;
+      const openLeft = (window.innerWidth - openWidth) / 2;
+      const openTop = window.innerHeight / 2;
 
-    setFrame({
-      height: rect.height,
-      openLeft,
-      openTop,
-      closedWidth: rect.width,
-      width: openWidth,
-      closedTranslateX: rect.left - openLeft,
-      closedTranslateY: rect.top - openTop,
-    });
-  }, [getOpenWidth]);
+      const closedTranslateX = rect.left - openLeft;
+      const closedTranslateY = rect.top - openTop;
+
+      setFrame({
+        height: nextIsOpen ? openHeight : rect.height,
+        left: openLeft,
+        top: nextIsOpen ? "50%" : openTop,
+        width: nextIsOpen ? openWidth : rect.width,
+        transform: nextIsOpen
+          ? "translate3d(0,-50%,0)"
+          : `translate3d(${closedTranslateX}px, ${closedTranslateY}px, 0)`,
+      });
+    },
+    [getOpenWidth]
+  );
+
+  const anchorRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      anchorElementRef.current = node;
+
+      if (!node || typeof window === "undefined") {
+        return;
+      }
+
+      setFrame((currentFrame) => {
+        const rect = node.getBoundingClientRect();
+        const openWidth = getOpenWidth(window.innerWidth);
+        const openHeight = window.innerHeight * SEARCH_OPEN_HEIGHT_RATIO;
+        const openLeft = (window.innerWidth - openWidth) / 2;
+        const openTop = window.innerHeight / 2;
+        const nextIsOpen = currentFrame.top === "50%";
+        const closedTranslateX = rect.left - openLeft;
+        const closedTranslateY = rect.top - openTop;
+
+        return {
+          height: nextIsOpen ? openHeight : rect.height,
+          left: openLeft,
+          top: nextIsOpen ? "50%" : openTop,
+          width: nextIsOpen ? openWidth : rect.width,
+          transform: nextIsOpen
+            ? "translate3d(0,-50%,0)"
+            : `translate3d(${closedTranslateX}px, ${closedTranslateY}px, 0)`,
+        };
+      });
+    },
+    [getOpenWidth]
+  );
 
   const scheduleFrameUpdate = useCallback(() => {
     if (frameRef.current !== null) {
@@ -88,17 +113,17 @@ export function useSearchTransition() {
     }
 
     frameRef.current = window.requestAnimationFrame(() => {
-      updateFrame();
+      updateFrame(isOpen);
       frameRef.current = null;
     });
-  }, [updateFrame]);
+  }, [isOpen, updateFrame]);
 
   const open = useCallback(() => {
     clearPendingFrames();
-    updateFrame();
+    updateFrame(true);
     setIsOpen(true);
     frameRef.current = window.requestAnimationFrame(() => {
-      updateFrame();
+      updateFrame(true);
       frameRef.current = null;
     });
   }, [clearPendingFrames, updateFrame]);
@@ -108,14 +133,10 @@ export function useSearchTransition() {
     setIsOpen(false);
     setQuery("");
     frameRef.current = window.requestAnimationFrame(() => {
-      updateFrame();
+      updateFrame(false);
       frameRef.current = null;
     });
   }, [clearPendingFrames, updateFrame]);
-
-  useLayoutEffect(() => {
-    updateFrame();
-  }, [updateFrame]);
 
   useEffect(() => {
     function handleViewportChange() {

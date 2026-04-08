@@ -20,20 +20,14 @@ export function SearchBtn() {
         ? createPortal(
             <>
               {/* 黒背景 */}
-              <SearchBackdrop
-                isActive={isOpen}
-                isVisible={isOpen}
-                onClose={close}
-              />
+              <SearchBackdrop isActive={isOpen} onClose={close} />
               <SearchPositionContainer
                 isOpen={isOpen}
                 height={frame.height}
-                openLeft={frame.openLeft}
-                openTop={frame.openTop}
-                closedWidth={frame.closedWidth}
+                left={frame.left}
+                top={frame.top}
                 width={frame.width}
-                closedTranslateX={frame.closedTranslateX}
-                closedTranslateY={frame.closedTranslateY}
+                transform={frame.transform}
               >
                 <SearchShell>
                   <SearchBarContent
