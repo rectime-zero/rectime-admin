@@ -78,7 +78,7 @@ export function AccountMenuPanel({
               <SunMediumIcon size={14} strokeWidth={1.8} />
             )}
             <span className="app-text-small">
-              {isDark ? "Dark mode" : "Light mode"}
+              {isDark ? "Light mode" : "Dark mode"}
             </span>
           </>
         }
