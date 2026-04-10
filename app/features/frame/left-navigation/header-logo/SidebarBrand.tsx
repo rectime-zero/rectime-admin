@@ -1,7 +1,7 @@
 import { useNavState } from "~/hooks/useNavState";
 import { cn } from "~/lib/cn";
 
-export function AppSidebarBrand() {
+export function SidebarBrand() {
   const isOpen = useNavState((state) => state.isOpen);
 
   return (
