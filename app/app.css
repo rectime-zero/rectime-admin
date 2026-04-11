@@ -147,10 +147,6 @@ input {
   width: 224px;
 }
 
-.left-navigation-expandable:has(.sidebar-hover-area:hover) {
-  width: 224px;
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

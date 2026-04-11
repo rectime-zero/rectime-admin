@@ -6,6 +6,7 @@ import { cn } from "~/lib/cn";
 import type { NavChildDef, NavItemDef } from "~/types/nav";
 
 import { NavAccordion } from "~/features/frame/left-navigation/components/NavAccordion";
+import { useLeftNavigationExpanded } from "~/features/frame/left-navigation/hooks/useLeftNavigationExpanded";
 
 type NavItemProps = {
   def: NavItemDef;
@@ -73,6 +74,7 @@ function ChildLink({
 export function NavItem({ def }: NavItemProps) {
   const pathname = useLocation().pathname;
   const isSidebarOpen = useNavState((state) => state.isOpen);
+  const isExpanded = useLeftNavigationExpanded();
   const openAccordions = useNavState((state) => state.openAccordions);
   const toggleAccordion = useNavState((state) => state.toggleAccordion);
   const closeForMobile = useNavState((state) => state.closeForMobile);
@@ -105,7 +107,7 @@ export function NavItem({ def }: NavItemProps) {
           <span
             className={cn(
               "overflow-hidden text-[13px] font-medium whitespace-nowrap transition-[max-width,opacity] duration-200",
-              isSidebarOpen ? "max-w-40 opacity-100" : "max-w-0 opacity-0"
+              isExpanded ? "max-w-40 opacity-100" : "max-w-0 opacity-0"
             )}
           >
             {def.label}
@@ -114,7 +116,7 @@ export function NavItem({ def }: NavItemProps) {
             <span
               className={cn(
                 badgeClass(),
-                isSidebarOpen ? "opacity-100" : "hidden"
+                isExpanded ? "opacity-100" : "hidden"
               )}
             >
               {def.badge}
@@ -125,12 +127,12 @@ export function NavItem({ def }: NavItemProps) {
             strokeWidth={1.8}
             className={cn(
               "ml-auto text-[color:var(--text-3)] transition duration-200",
-              isSidebarOpen ? "opacity-100" : "hidden",
+              isExpanded ? "opacity-100" : "hidden",
               isAccordionOpen ? "rotate-90" : ""
             )}
           />
         </button>
-        <NavAccordion isOpen={isSidebarOpen && isAccordionOpen}>
+        <NavAccordion isOpen={isExpanded && isAccordionOpen}>
           {def.children.map((child) => (
             <ChildLink
               key={child.id}
@@ -139,7 +141,7 @@ export function NavItem({ def }: NavItemProps) {
             />
           ))}
         </NavAccordion>
-        {!isSidebarOpen ? (
+        {!isExpanded ? (
           <div className="pointer-events-none absolute top-0 left-[66px] z-[200] min-w-[180px] translate-x-[-4px] rounded-xl border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] p-1 opacity-0 shadow-[var(--shadow-soft)] transition duration-150 group-focus-within/nav:pointer-events-auto group-focus-within/nav:translate-x-0 group-focus-within/nav:opacity-100 group-hover/nav:pointer-events-auto group-hover/nav:translate-x-0 group-hover/nav:opacity-100">
             <div className="flex items-center gap-2.5 border-b border-[color:var(--border-1)] px-2.5 pt-2 pb-2 text-[12.5px] font-semibold text-[color:var(--text-1)]">
               <span className="inline-flex w-4 min-w-4 items-center justify-center">
@@ -202,7 +204,7 @@ export function NavItem({ def }: NavItemProps) {
             <span
               className={cn(
                 "overflow-hidden text-[13px] font-medium whitespace-nowrap transition-[max-width,opacity] duration-200",
-                isSidebarOpen ? "max-w-40 opacity-100" : "max-w-0 opacity-0"
+                isExpanded ? "max-w-40 opacity-100" : "max-w-0 opacity-0"
               )}
             >
               {def.label}
@@ -211,7 +213,7 @@ export function NavItem({ def }: NavItemProps) {
               <span
                 className={cn(
                   badgeClass(),
-                  isSidebarOpen ? "opacity-100" : "hidden"
+                  isExpanded ? "opacity-100" : "hidden"
                 )}
               >
                 {def.badge}
@@ -220,7 +222,7 @@ export function NavItem({ def }: NavItemProps) {
           </>
         )}
       </NavLink>
-      {!isSidebarOpen ? (
+      {!isExpanded ? (
         <div className="pointer-events-none absolute top-1/2 left-[66px] z-[200] translate-x-[-4px] -translate-y-1/2 rounded-lg border border-[color:var(--border-2)] bg-[color:var(--surface-overlay-strong)] px-[11px] py-[5px] text-[12.5px] font-medium text-[color:var(--text-1)] opacity-0 shadow-[var(--shadow-soft)] transition duration-150 group-hover/nav:pointer-events-auto group-hover/nav:translate-x-0 group-hover/nav:opacity-100">
           {def.label}
         </div>

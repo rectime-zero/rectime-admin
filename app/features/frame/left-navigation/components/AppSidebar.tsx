@@ -12,7 +12,6 @@ export function AppSidebar() {
         {sections.map((section) => (
           <NavSection key={section.label} def={section} />
         ))}
-        <div className="w-full bg-red-500">aa</div>
       </div>
     </aside>
   );
